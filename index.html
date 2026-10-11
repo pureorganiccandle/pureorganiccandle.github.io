@@ -132,7 +132,9 @@ nav.top.scrolled{background:rgba(251,246,240,.5);border-bottom-color:rgba(0,0,0,
 .story{padding-block:80px 30px;text-align:center}
 .story .eyebrow{color:var(--ink)}
 .story h2{margin-top:14px}
-.story .lede{max-width:52ch;margin:18px auto 0;color:var(--muted)}
+.story .lede{max-width:64ch;margin:18px auto 0;color:var(--muted);display:grid;gap:12px;text-align:left}
+.story .lede p{margin:0}
+@media (min-width:901px){.story .lede{text-align:center}}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px;text-align:left}
 .tile{position:relative;border-radius:var(--r);overflow:hidden;min-height:440px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:22px}
 .tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
@@ -353,9 +355,12 @@ button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
   </section>
 
   <section class="wrap story" id="palm" aria-labelledby="palm-h">
-    <span class="eyebrow">Made from palm wax</span>
-    <h2 id="palm-h">เทียนไขปาล์ม เทมือทุกชิ้น</h2>
-    <p class="lede">ไขปาล์มเป็นไขจากพืช เนื้อแข็ง คงรูปดี ยึดกลิ่นได้ดี และผิวเทียนเกิดลวดลายผลึกสวยเป็นธรรมชาติ เราเทเทียนด้วยมือมาตั้งแต่ปี พ.ศ. 2540</p>
+    <span class="eyebrow">Made from Palm Wax</span>
+    <h2 id="palm-h">เทียนไขปาล์ม ผลิตด้วยมืออย่างประณีต</h2>
+    <div class="lede">
+      <p>เทียนของเราผลิตจากไขปาล์ม ซึ่งเป็นไขจากพืชที่มีคุณสมบัติเนื้อแข็งและคงรูปได้ดี เหมาะสำหรับการผลิตเทียนหลากหลายรูปแบบ พร้อมคุณสมบัติในการรองรับน้ำหอมสำหรับการผลิตเทียนหอมโดยเฉพาะ อีกทั้งยังสามารถเกิดลวดลายผลึกบนพื้นผิวเทียนที่มีเอกลักษณ์ สะท้อนความงดงามตามธรรมชาติของวัสดุ</p>
+      <p>เราพิถีพิถันในทุกขั้นตอนการผลิต โดยใช้กระบวนการเทด้วยมือ เพื่อให้ความสำคัญกับรายละเอียดและคุณภาพของเทียนแต่ละชิ้น พร้อมสั่งสมประสบการณ์และความเชี่ยวชาญในการผลิตเทียนมาตั้งแต่ปี พ.ศ. 2540 เพื่อส่งมอบผลิตภัณฑ์ที่เหมาะสมกับความต้องการของลูกค้า ทั้งสำหรับของชำร่วย งานมงคล และการสร้างสรรค์เทียนหอมภายใต้แบรนด์ของคุณ</p>
+    </div>
     <div class="tiles">
       <div class="tile"><img src="palmwax.jpg" alt="เกล็ดไขปาล์มในชามไม้" loading="lazy"><span class="tag">วัตถุดิบ</span><div><h3>ไขจากพืช</h3><p>มาจากผลปาล์มซึ่งปลูกทดแทนได้ ใช้ได้ทั้งเทียนแท่ง ทีไลท์ และเทียนในแก้ว</p></div></div>
       <div class="tile"><img src="jars.jpg" alt="เทียนหอมเทมือในแก้วสีอำพัน" loading="lazy"><span class="tag">Hand-poured</span><div><h3>เทมือทีละชิ้น</h3><p>ควบคุมอุณหภูมิและการเซ็ตตัวของเทียน ให้ผิวเรียบและเผาไหม้สม่ำเสมอ</p></div></div>
