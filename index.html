@@ -89,7 +89,7 @@ nav.top.scrolled{background:rgba(251,246,240,.5);border-bottom-color:rgba(0,0,0,
 .pill .dot{background:var(--forest);color:#fff;width:32px;height:32px}
 
 /* ---------- white sheet ---------- */
-.sheet{position:relative;background:var(--paper);padding-block:72px 40px}
+.sheet{position:relative;background:var(--paper);padding-block:72px 0}
 .head-row{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:28px}
 .tabs{display:flex;gap:6px}
 .tab{border:0;background:transparent;font:inherit;font-size:15px;font-weight:400;padding:8px 16px;border-radius:999px;cursor:pointer;color:var(--ink)}
@@ -159,7 +159,7 @@ nav.top.scrolled{background:rgba(251,246,240,.5);border-bottom-color:rgba(0,0,0,
 .step p{margin:6px 0 0;font-size:14.5px;color:var(--muted)}
 
 /* ---------- contact ---------- */
-.contact{margin-top:80px;background:var(--forest);color:#E9EFE8;border-radius:var(--r) var(--r) 0 0;padding-block:72px 40px}
+.contact{margin-top:80px;background:var(--forest);color:#E9EFE8;border-radius:var(--r) var(--r) 0 0;padding-block:72px calc(32px + env(safe-area-inset-bottom,0px))}
 .contact .grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:56px}
 .contact h2{color:#fff}
 .contact h2 em{font-style:italic;color:var(--mint)}
