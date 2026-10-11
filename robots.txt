@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pureorganiccandle.github.io/sitemap.xml
