@@ -522,15 +522,18 @@ button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
       <div class="submit-row">
         <button type="submit" class="pill big">ส่งข้อมูล <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></button>
         <span class="req"><i>*</i> จำเป็นต้องกรอก</span>
-        <p class="sending" id="sending" hidden>กำลังส่ง…</p>
       </div>
 
       <div class="result" id="result" hidden tabindex="-1">
-        <h2 id="resTitle">ส่งข้อมูลเรียบร้อยแล้ว</h2>
-        <p id="resMsg">ขอบคุณครับ เราได้รับข้อมูลแล้ว ฝ่ายขายจะติดต่อกลับภายในวันทำการ</p>
+        <h2 id="resTitle">ตรวจสอบข้อมูลก่อนส่ง</h2>
+        <p id="resMsg">กรุณาตรวจสอบรายละเอียดด้านล่าง ถ้าถูกต้องแล้วกด "ยืนยัน" เพื่อส่งข้อมูล</p>
         <pre id="summary"></pre>
+        <div class="send" id="confirmRow">
+          <button type="button" class="pill big" id="confirmBtn">ยืนยัน <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg></span></button>
+          <button type="button" class="ghost-d" id="cancelBtn">ยกเลิก</button>
+          <span class="sending" id="sending" hidden>กำลังส่งข้อมูล…</span>
+        </div>
         <div class="send" id="fallback" hidden>
-          <a id="mailBtn" href="#" hidden></a>
           <button type="button" class="pill" id="copyBtn" style="border:0;cursor:pointer">คัดลอกข้อความ <span class="dot" aria-hidden="true">→</span></button>
           <a class="ghost-d" href="https://www.facebook.com/profile.php?id=61595259780289" target="_blank" rel="noopener">ส่งทาง Facebook</a>
         </div>
@@ -623,23 +626,36 @@ button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
       'น้ำหอม: '+radio('scent'),'ภาชนะ: '+radio('vessel'),
       v('f-note')?'\nรายละเอียดเพิ่มเติม:\n'+v('f-note'):null].filter(function(x){return x!==null});
     var text=lines.join('\n'); sum.textContent=text;
-    document.getElementById('mailBtn').href='mailto:pureorganic.sales01@gmail.com?subject='+encodeURIComponent('สั่งผลิตเทียนหอม: '+(v('f-brand')||v('f-name')))+'&body='+encodeURIComponent(text);
-    var btn=f.querySelector('button[type=submit]'),sending=document.getElementById('sending');
-    function show(okSent){
-      document.getElementById('resTitle').textContent=okSent?'ส่งข้อมูลเรียบร้อยแล้ว':'ส่งข้อมูลไม่สำเร็จ';
-      document.getElementById('resMsg').textContent=okSent?'ขอบคุณครับ เราได้รับข้อมูลแล้ว ฝ่ายขายจะติดต่อกลับภายในวันทำการ':'กรุณากดส่งข้อมูลอีกครั้ง หรือคัดลอกข้อความด้านล่างไปส่งทาง Facebook / LINE ได้เลยครับ';
-      document.getElementById('fallback').hidden=okSent; sending.hidden=true; btn.disabled=false;
-      res.hidden=false; document.getElementById('copied').hidden=true; res.focus(); res.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-    btn.disabled=true; sending.hidden=false;
-    var payload={_subject:'สั่งผลิตเทียนหอม: '+(v('f-brand')||v('f-name')),_template:'box',_captcha:'false',_replyto:v('f-email'),
-      'ชื่อผู้ติดต่อ':v('f-name'),'แบรนด์ / บริษัท':v('f-brand')||'-','เบอร์โทร':v('f-phone'),'อีเมล':v('f-email'),'LINE':v('f-line')||'-',
-      'รูปแบบเทียน':types.join(', '),'ใช้สำหรับ':v('f-use'),'จำนวน':v('f-qty'),'ต้องการรับของ':v('f-date')||'-','ติดโลโก้':v('f-logo'),
-      'น้ำหอม':radio('scent'),'ภาชนะ':radio('vessel'),'รายละเอียดเพิ่มเติม':v('f-note')||'-'};
-    var ctl=window.AbortController?new AbortController():null; var tm=setTimeout(function(){ctl&&ctl.abort()},15000);
-    fetch('https://formsubmit.co/ajax/pureorganic.sales01@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload),signal:ctl?ctl.signal:undefined})
-      .then(function(r){return r.json().catch(function(){return {}}).then(function(j){clearTimeout(tm);show(r.ok&&String(j.success)!=='false')})})
-      .catch(function(){clearTimeout(tm);show(false)});
+    window._order={name:v('f-name'),brand:v('f-brand'),phone:v('f-phone'),email:v('f-email'),line:v('f-line'),types:types.join(', '),use:v('f-use'),qty:v('f-qty'),date:v('f-date'),logo:v('f-logo'),scent:radio('scent'),vessel:radio('vessel'),note:v('f-note')};
+    setState('confirm');
+    res.hidden=false; res.focus(); res.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  var SHEET_URL='';
+  function setState(s){
+    var t=document.getElementById('resTitle'),m=document.getElementById('resMsg');
+    document.getElementById('confirmRow').hidden=(s==='done');
+    document.getElementById('fallback').hidden=(s!=='fail');
+    document.getElementById('copied').hidden=true;
+    document.getElementById('sending').hidden=(s!=='sending');
+    document.getElementById('confirmBtn').disabled=(s==='sending');
+    document.getElementById('cancelBtn').disabled=(s==='sending');
+    f.querySelector('button[type=submit]').disabled=(s==='sending'||s==='done');
+    if(s==='confirm'||s==='sending'){t.textContent='ตรวจสอบข้อมูลก่อนส่ง';m.textContent='กรุณาตรวจสอบรายละเอียดด้านล่าง ถ้าถูกต้องแล้วกด "ยืนยัน" เพื่อส่งข้อมูล'}
+    if(s==='done'){t.textContent='ส่งข้อมูลเรียบร้อยแล้ว';m.textContent='ขอบคุณครับ เราได้รับข้อมูลแล้ว ฝ่ายขายจะติดต่อกลับภายในวันทำการ'}
+    if(s==='fail'){t.textContent='ส่งข้อมูลไม่สำเร็จ';m.textContent='กรุณากด "ยืนยัน" อีกครั้ง หรือคัดลอกข้อความด้านล่างไปส่งทาง Facebook / LINE ได้เลยครับ'}
+  }
+  document.getElementById('cancelBtn').addEventListener('click',function(){
+    res.hidden=true; f.querySelector('button[type=submit]').disabled=false;
+    document.getElementById('f-name').scrollIntoView({behavior:'smooth',block:'center'});
+  });
+  document.getElementById('confirmBtn').addEventListener('click',function(){
+    if(!window._order) return;
+    if(!SHEET_URL){setState('fail');return}
+    setState('sending');
+    var ctl=window.AbortController?new AbortController():null; var tm=setTimeout(function(){ctl&&ctl.abort()},20000);
+    fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(window._order),signal:ctl?ctl.signal:undefined})
+      .then(function(){clearTimeout(tm);setState('done')})
+      .catch(function(){clearTimeout(tm);setState('fail')});
   });
   document.getElementById('copyBtn').addEventListener('click',function(){
     var t=sum.textContent,done=function(){document.getElementById('copied').hidden=false};
