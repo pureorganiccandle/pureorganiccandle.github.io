@@ -520,18 +520,18 @@ button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
       </fieldset>
 
       <div class="submit-row">
-        <button type="submit" class="pill big">ส่งรายละเอียดการสั่งผลิต <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></button>
+        <button type="submit" class="pill big">ส่งข้อมูล <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></button>
         <span class="req"><i>*</i> จำเป็นต้องกรอก</span>
         <p class="sending" id="sending" hidden>กำลังส่ง…</p>
       </div>
 
       <div class="result" id="result" hidden tabindex="-1">
-        <h2 id="resTitle">ส่งรายละเอียดถึงเราแล้ว</h2>
-        <p id="resMsg">ขอบคุณครับ ฝ่ายขายจะติดต่อกลับภายในวันทำการ ทางเบอร์โทรหรืออีเมลที่คุณกรอกไว้</p>
+        <h2 id="resTitle">ส่งข้อมูลเรียบร้อยแล้ว</h2>
+        <p id="resMsg">ขอบคุณครับ เราได้รับข้อมูลแล้ว ฝ่ายขายจะติดต่อกลับภายในวันทำการ</p>
         <pre id="summary"></pre>
         <div class="send" id="fallback" hidden>
-          <a class="pill" id="mailBtn" href="#">ส่งทางอีเมล <span class="dot" aria-hidden="true">→</span></a>
-          <button type="button" class="ghost-d" id="copyBtn">คัดลอกข้อความ</button>
+          <a id="mailBtn" href="#" hidden></a>
+          <button type="button" class="pill" id="copyBtn" style="border:0;cursor:pointer">คัดลอกข้อความ <span class="dot" aria-hidden="true">→</span></button>
           <a class="ghost-d" href="https://www.facebook.com/profile.php?id=61595259780289" target="_blank" rel="noopener">ส่งทาง Facebook</a>
         </div>
         <p class="copied" id="copied" hidden>คัดลอกแล้ว นำไปวางในแชท Facebook หรือ LINE ได้เลย</p>
@@ -626,8 +626,8 @@ button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
     document.getElementById('mailBtn').href='mailto:pureorganic.sales01@gmail.com?subject='+encodeURIComponent('สั่งผลิตเทียนหอม: '+(v('f-brand')||v('f-name')))+'&body='+encodeURIComponent(text);
     var btn=f.querySelector('button[type=submit]'),sending=document.getElementById('sending');
     function show(okSent){
-      document.getElementById('resTitle').textContent=okSent?'ส่งรายละเอียดถึงเราแล้ว':'ยังส่งอัตโนมัติไม่สำเร็จ';
-      document.getElementById('resMsg').textContent=okSent?'ขอบคุณครับ ฝ่ายขายจะติดต่อกลับภายในวันทำการ ทางเบอร์โทรหรืออีเมลที่คุณกรอกไว้':'กรุณาส่งข้อความด้านล่างให้เราทางอีเมล หรือคัดลอกไปส่งทาง Facebook / LINE ได้เลยครับ';
+      document.getElementById('resTitle').textContent=okSent?'ส่งข้อมูลเรียบร้อยแล้ว':'ส่งข้อมูลไม่สำเร็จ';
+      document.getElementById('resMsg').textContent=okSent?'ขอบคุณครับ เราได้รับข้อมูลแล้ว ฝ่ายขายจะติดต่อกลับภายในวันทำการ':'กรุณากดส่งข้อมูลอีกครั้ง หรือคัดลอกข้อความด้านล่างไปส่งทาง Facebook / LINE ได้เลยครับ';
       document.getElementById('fallback').hidden=okSent; sending.hidden=true; btn.disabled=false;
       res.hidden=false; document.getElementById('copied').hidden=true; res.focus(); res.scrollIntoView({behavior:'smooth',block:'start'});
     }
