@@ -235,6 +235,8 @@ legend i,.f i,.req i{color:var(--ember);font-style:normal}
 .seg input:focus-visible+span{outline:2px solid var(--ember);outline-offset:2px}
 .err{margin:0;color:var(--ember);font-size:14px}
 .submit-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.sending{margin:0;font-size:14px;color:var(--green)}
+button.pill:disabled{opacity:.6;cursor:wait}
 button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
 .pill.big{background:var(--forest);color:#fff;font-size:16.5px;padding:10px 10px 10px 26px}
 .pill.big .dot{background:var(--mint);color:var(--forest)}
@@ -461,7 +463,8 @@ button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
           <label class="f"><span>ชื่อผู้ติดต่อ <i>*</i></span><input id="f-name" name="name" required autocomplete="name" placeholder="เช่น คุณสมชาย"></label>
           <label class="f"><span>ชื่อแบรนด์ / บริษัท</span><input id="f-brand" name="brand" autocomplete="organization" placeholder="ถ้ามี"></label>
           <label class="f"><span>เบอร์โทร <i>*</i></span><input id="f-phone" name="phone" type="tel" required autocomplete="tel" placeholder="08x-xxx-xxxx"></label>
-          <label class="f"><span>LINE ID หรืออีเมล</span><input id="f-line" name="line" placeholder="ช่องทางที่สะดวกให้เราติดต่อ"></label>
+          <label class="f"><span>อีเมล <i>*</i></span><input id="f-email" name="email" type="email" required autocomplete="email" placeholder="name@example.com"></label>
+          <label class="f"><span>LINE ID</span><input id="f-line" name="line" placeholder="ถ้ามี"></label>
         </div>
       </fieldset>
 
@@ -517,15 +520,16 @@ button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
       </fieldset>
 
       <div class="submit-row">
-        <button type="submit" class="pill big">สรุปรายละเอียดการสั่งผลิต <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></button>
+        <button type="submit" class="pill big">ส่งรายละเอียดการสั่งผลิต <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></button>
         <span class="req"><i>*</i> จำเป็นต้องกรอก</span>
+        <p class="sending" id="sending" hidden>กำลังส่ง…</p>
       </div>
 
       <div class="result" id="result" hidden tabindex="-1">
-        <h2>สรุปรายละเอียดของคุณ</h2>
-        <p>ส่งข้อความนี้ให้เราทางใดทางหนึ่ง เราจะติดต่อกลับภายในวันทำการ</p>
+        <h2 id="resTitle">ส่งรายละเอียดถึงเราแล้ว</h2>
+        <p id="resMsg">ขอบคุณครับ ฝ่ายขายจะติดต่อกลับภายในวันทำการ ทางเบอร์โทรหรืออีเมลที่คุณกรอกไว้</p>
         <pre id="summary"></pre>
-        <div class="send">
+        <div class="send" id="fallback" hidden>
           <a class="pill" id="mailBtn" href="#">ส่งทางอีเมล <span class="dot" aria-hidden="true">→</span></a>
           <button type="button" class="ghost-d" id="copyBtn">คัดลอกข้อความ</button>
           <a class="ghost-d" href="https://www.facebook.com/profile.php?id=61595259780289" target="_blank" rel="noopener">ส่งทาง Facebook</a>
@@ -607,20 +611,35 @@ button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
   f.addEventListener('submit',function(e){
     e.preventDefault();
     var ok=true,first=null;
-    ['f-name','f-phone','f-qty'].forEach(function(id){var el=document.getElementById(id);var bad=!el.value.trim();el.setAttribute('aria-invalid',bad?'true':'false');if(bad){ok=false;first=first||el}});
+    ['f-name','f-phone','f-email','f-qty'].forEach(function(id){var el=document.getElementById(id);var bad=!el.value.trim()||(id==='f-email'&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(el.value.trim()));el.setAttribute('aria-invalid',bad?'true':'false');if(bad){ok=false;first=first||el}});
     var types=[].map.call(f.querySelectorAll('input[name="type"]:checked'),function(x){return x.value});
     document.getElementById('typeErr').hidden=types.length>0; if(!types.length){ok=false;first=first||document.getElementById('t-tealight')}
     if(!ok){first.focus();return}
     var lines=['สั่งผลิตเทียนหอม (จากเว็บไซต์ Pure Organic)','',
       'ชื่อผู้ติดต่อ: '+v('f-name'), v('f-brand')?'แบรนด์ / บริษัท: '+v('f-brand'):null,
-      'เบอร์โทร: '+v('f-phone'), v('f-line')?'LINE / อีเมล: '+v('f-line'):null,'',
+      'เบอร์โทร: '+v('f-phone'), 'อีเมล: '+v('f-email'), v('f-line')?'LINE: '+v('f-line'):null,'',
       'รูปแบบเทียน: '+types.join(', '),'ใช้สำหรับ: '+v('f-use'),'จำนวน: '+v('f-qty'),
       v('f-date')?'ต้องการรับของ: '+v('f-date'):null,'ติดโลโก้: '+v('f-logo'),
       'น้ำหอม: '+radio('scent'),'ภาชนะ: '+radio('vessel'),
       v('f-note')?'\nรายละเอียดเพิ่มเติม:\n'+v('f-note'):null].filter(function(x){return x!==null});
     var text=lines.join('\n'); sum.textContent=text;
     document.getElementById('mailBtn').href='mailto:pureorganic.sales01@gmail.com?subject='+encodeURIComponent('สั่งผลิตเทียนหอม: '+(v('f-brand')||v('f-name')))+'&body='+encodeURIComponent(text);
-    res.hidden=false; document.getElementById('copied').hidden=true; res.focus(); res.scrollIntoView({behavior:'smooth',block:'start'});
+    var btn=f.querySelector('button[type=submit]'),sending=document.getElementById('sending');
+    function show(okSent){
+      document.getElementById('resTitle').textContent=okSent?'ส่งรายละเอียดถึงเราแล้ว':'ยังส่งอัตโนมัติไม่สำเร็จ';
+      document.getElementById('resMsg').textContent=okSent?'ขอบคุณครับ ฝ่ายขายจะติดต่อกลับภายในวันทำการ ทางเบอร์โทรหรืออีเมลที่คุณกรอกไว้':'กรุณาส่งข้อความด้านล่างให้เราทางอีเมล หรือคัดลอกไปส่งทาง Facebook / LINE ได้เลยครับ';
+      document.getElementById('fallback').hidden=okSent; sending.hidden=true; btn.disabled=false;
+      res.hidden=false; document.getElementById('copied').hidden=true; res.focus(); res.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    btn.disabled=true; sending.hidden=false;
+    var payload={_subject:'สั่งผลิตเทียนหอม: '+(v('f-brand')||v('f-name')),_template:'box',_captcha:'false',_replyto:v('f-email'),
+      'ชื่อผู้ติดต่อ':v('f-name'),'แบรนด์ / บริษัท':v('f-brand')||'-','เบอร์โทร':v('f-phone'),'อีเมล':v('f-email'),'LINE':v('f-line')||'-',
+      'รูปแบบเทียน':types.join(', '),'ใช้สำหรับ':v('f-use'),'จำนวน':v('f-qty'),'ต้องการรับของ':v('f-date')||'-','ติดโลโก้':v('f-logo'),
+      'น้ำหอม':radio('scent'),'ภาชนะ':radio('vessel'),'รายละเอียดเพิ่มเติม':v('f-note')||'-'};
+    var ctl=window.AbortController?new AbortController():null; var tm=setTimeout(function(){ctl&&ctl.abort()},15000);
+    fetch('https://formsubmit.co/ajax/pureorganic.sales01@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload),signal:ctl?ctl.signal:undefined})
+      .then(function(r){return r.json().catch(function(){return {}}).then(function(j){clearTimeout(tm);show(r.ok&&String(j.success)!=='false')})})
+      .catch(function(){clearTimeout(tm);show(false)});
   });
   document.getElementById('copyBtn').addEventListener('click',function(){
     var t=sum.textContent,done=function(){document.getElementById('copied').hidden=false};
