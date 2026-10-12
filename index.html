@@ -315,6 +315,9 @@ nav.top a.here{color:var(--ember)}
 .gsz-wrap .gk:first-of-type{margin-top:0}
 .gsz.gnone{grid-template-columns:1fr;margin-top:10px}
 @media (min-width:761px){.gsz.gnone label{flex-direction:row;justify-content:center;gap:10px;padding:12px}}
+.seg .sw{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:-1px;border:1px solid rgba(0,0,0,.15)}
+.seg .sw.wood{background:linear-gradient(135deg,#C99A64,#8A5A2E)}
+.seg .sw.steel{background:linear-gradient(135deg,#F2F3F4,#9EA3A8)}
 </style>
 </head>
 <body>
@@ -557,6 +560,8 @@ nav.top a.here{color:var(--ember)}
             <label><input type="radio" name="glass" value="แก้วดำ 8.9 oz (255 ml) Ø75.5 × สูง 85 mm" id="gl-6"><span class="gi"><img src="glass-black.png" alt="" style="height:96px;width:85px"></span><b>8.9 oz</b><small>255 ml<br>Ø 75.5 mm<br>สูง 85 mm</small></label>
           </div>
           <div class="gsz gnone"><label class="none"><input type="radio" name="glass" value="" id="gl-0" checked><b>ยังไม่แน่ใจ / แก้วแบบอื่น</b><small>คุยรายละเอียดกับฝ่ายขายได้</small></label></div>
+          <span class="gk">ฝาปิด</span>
+          <div class="seg" role="radiogroup" aria-label="ฝาปิด"><label><input type="radio" name="lid" value="" id="lid-0" checked><span>ไม่ต้องการฝา</span></label><label><input type="radio" name="lid" value="ฝาไม้" id="lid-1"><span><i class="sw wood"></i>ฝาไม้</span></label><label><input type="radio" name="lid" value="ฝาสแตนเลส" id="lid-2"><span><i class="sw steel"></i>ฝาสแตนเลส</span></label></div>
           </div>
         </div>
       </fieldset>
@@ -741,6 +746,7 @@ nav.top a.here{color:var(--ember)}
   function gsync(){gw.hidden=!tg.checked}
   tg.addEventListener('change',gsync); f.querySelectorAll('input[name="glass"]').forEach(function(r){r.addEventListener('change',function(){if(r.value)document.getElementById('vs-2').checked=true})}); window.addEventListener('hashchange',gsync); gsync();
   function glassSize(){if(gw.hidden)return '';var r=f.querySelector('input[name="glass"]:checked');return r&&r.value?r.value:''}
+  function lidSel(){if(gw.hidden)return '';var r=f.querySelector('input[name="lid"]:checked');return r&&r.value?r.value:''}
   function radio(n){var r=f.querySelector('input[name="'+n+'"]:checked');return r?r.value:''}
   f.addEventListener('submit',function(e){
     e.preventDefault();
@@ -754,10 +760,10 @@ nav.top a.here{color:var(--ember)}
       'เบอร์โทร: '+v('f-phone'), 'อีเมล: '+v('f-email'), v('f-line')?'LINE: '+v('f-line'):null,'',
       'รูปแบบเทียน: '+types.join(', '),'ใช้สำหรับ: '+v('f-use'),'จำนวน: '+v('f-qty'),
       v('f-date')?'ต้องการรับของ: '+v('f-date'):null,'ติดโลโก้: '+v('f-logo'),
-      'น้ำหอม: '+radio('scent'),'ภาชนะ: '+radio('vessel'),glassSize()?'ขนาดแก้ว: '+glassSize():null,
+      'น้ำหอม: '+radio('scent'),'ภาชนะ: '+radio('vessel'),glassSize()?'ขนาดแก้ว: '+glassSize():null,lidSel()?'ฝาปิด: '+lidSel():null,
       v('f-note')?'\nรายละเอียดเพิ่มเติม:\n'+v('f-note'):null].filter(function(x){return x!==null});
     var text=lines.join('\n'); sum.textContent=text;
-    window._order={name:v('f-name'),brand:v('f-brand'),phone:v('f-phone'),email:v('f-email'),line:v('f-line'),types:types.join(', '),use:v('f-use'),qty:v('f-qty'),date:v('f-date'),logo:v('f-logo'),scent:radio('scent'),vessel:radio('vessel')+(glassSize()?' · '+glassSize():''),note:v('f-note')};
+    window._order={name:v('f-name'),brand:v('f-brand'),phone:v('f-phone'),email:v('f-email'),line:v('f-line'),types:types.join(', '),use:v('f-use'),qty:v('f-qty'),date:v('f-date'),logo:v('f-logo'),scent:radio('scent'),vessel:radio('vessel')+(glassSize()?' · '+glassSize():'')+(lidSel()?' · '+lidSel():''),note:v('f-note')};
     setState('confirm');
     res.hidden=false; res.focus(); res.scrollIntoView({behavior:'smooth',block:'start'});
   });
