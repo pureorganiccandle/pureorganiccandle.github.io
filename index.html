@@ -162,13 +162,21 @@ nav.top.scrolled{background:rgba(251,246,240,.5);border-bottom-color:rgba(0,0,0,
 .moq{display:inline-block;margin-top:22px;background:var(--mint);color:var(--forest);border-radius:999px;padding:6px 16px;font-size:14px;font-weight:500}
 
 /* ---------- process ---------- */
-.process{background:var(--card);border-radius:var(--r);padding:56px clamp(20px,4vw,56px)}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:36px;counter-reset:s}
-.step{border-top:1px solid #C9CBBF;padding-top:18px}
-.step::before{counter-increment:s;content:counter(s,decimal-leading-zero);font-family:var(--f-display);font-size:30px;color:var(--green);display:block;margin-bottom:6px}
-.step h3{font-family:var(--f-body);font-weight:500;font-size:17px;letter-spacing:0}
-.step p{margin:6px 0 0;font-size:14.5px;color:var(--muted)}
-
+.flow{background:var(--forest);color:#E9EFE8;padding-block:72px 80px;margin-top:40px}
+.flow .eyebrow{color:#9FB5A4}
+.flow h2{color:#fff;margin-top:14px}
+.psteps{list-style:none;margin:44px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;counter-reset:ps}
+.pstep{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0;position:relative}
+.pstep .pi{color:#fff;margin-bottom:14px}
+.pstep h3{display:flex;flex-direction:column;align-items:center;gap:4px;counter-increment:ps;letter-spacing:0}
+.pstep h3::before{content:counter(ps,decimal-leading-zero);font-family:var(--f-label);font-size:13px;font-weight:600;color:var(--mint);letter-spacing:.14em}
+.pstep h3 .en{font-family:var(--f-label);font-weight:600;font-size:26px;color:#fff;line-height:1.2}
+.pstep h3 .th{font-family:var(--f-body);font-weight:400;font-size:15px;color:var(--mint)}
+.pstep .pdesc{margin:14px 0 22px;font-size:15px;line-height:1.7;color:#D5E0D6;max-width:30ch;min-height:5.1em}
+.pcard{list-style:disc;margin:auto 0 0;padding:22px 22px 22px 40px;background:#E3EDE4;color:#24402D;border-radius:24px;text-align:left;font-size:14px;line-height:1.65;width:100%;flex:1}
+.pcard li+li{margin-top:6px}
+@media (max-width:1000px){.psteps{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:48px}}
+@media (max-width:560px){.psteps{grid-template-columns:1fr}.pstep .pdesc{min-height:0}}
 /* ---------- contact ---------- */
 .contact{margin-top:80px;background:var(--forest);color:#E9EFE8;border-radius:var(--r) var(--r) 0 0;padding-block:72px calc(32px + env(safe-area-inset-bottom,0px))}
 .contact .grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:56px}
@@ -191,10 +199,8 @@ footer img{height:28px;width:auto}
   .tile{min-height:340px}
   .svc,.contact .grid{grid-template-columns:1fr;gap:32px}
   .svc li{grid-template-columns:1fr;gap:4px}
-  .steps{grid-template-columns:1fr 1fr}
 }
 @media (max-width:520px){
-  .steps{grid-template-columns:1fr}
   .track{width:120px}
   .facts div{grid-template-columns:1fr;gap:4px}
 }
@@ -395,16 +401,36 @@ button.pill{border:0;cursor:pointer;font:inherit;font-weight:500}
     </div>
   </section>
 
-  <section class="wrap" aria-labelledby="proc-h">
-    <div class="process">
+  <section class="flow" aria-labelledby="proc-h">
+    <div class="wrap">
       <span class="eyebrow">How it works</span>
-      <h2 id="proc-h" style="margin-top:14px">ขั้นตอนสั่งผลิต</h2>
-      <div class="steps">
-        <div class="step"><h3>คุยรายละเอียด</h3><p>แจ้งรูปแบบ ขนาด และจำนวนที่ต้องการ</p></div>
-        <div class="step"><h3>เตรียมวัตถุดิบ</h3><p>ส่งน้ำหอมและภาชนะมาให้เรา หรือให้เราจัดเตรียมให้</p></div>
-        <div class="step"><h3>ทำตัวอย่าง</h3><p>เราทำเทียนตัวอย่างให้ตรวจก่อนเริ่มผลิต</p></div>
-        <div class="step"><h3>ผลิตและส่งมอบ</h3><p>เทมือตามจำนวนสั่ง แล้วส่งถึงมือคุณ</p></div>
-      </div>
+      <h2 id="proc-h">ขั้นตอนสั่งผลิต</h2>
+      <ol class="psteps">
+        <li class="pstep">
+          <svg class="pi" viewBox="0 0 48 48" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 22c0-7 6-12 14-12s14 5 14 12-6 12-14 12c-2 0-4 0-6-1l-7 4 2-7c-2-2-3-5-3-8z"/><circle cx="16" cy="22" r="1.2" fill="currentColor"/><circle cx="22" cy="22" r="1.2" fill="currentColor"/><circle cx="28" cy="22" r="1.2" fill="currentColor"/><path d="M36 18c3 2 5 5 5 8 0 3-1 5-3 7l2 6-6-3c-2 1-4 1-6 1"/></svg>
+          <h3><span class="en">Consulting</span><span class="th">ปรึกษาความต้องการ</span></h3>
+          <p class="pdesc">ติดต่อทางโทรศัพท์ อีเมล Facebook หรือนัดคุยรายละเอียด แจ้งความต้องการเบื้องต้นของคุณ</p>
+          <ul class="pcard"><li>ประเภทงาน เช่น ทำแบรนด์ ของชำร่วย ของขวัญองค์กร</li><li>รูปแบบเทียน กลิ่น และภาชนะที่ต้องการ</li><li>งบประมาณ จำนวน และวันที่ต้องการรับสินค้า</li><li>ขั้นต่ำเพียง 10 ชิ้นต่อแบบ แบรนด์เล็กก็เริ่มต้นได้ง่าย</li></ul>
+        </li>
+        <li class="pstep">
+          <svg class="pi" viewBox="0 0 48 48" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 4c3 6 9 10 9 18a9 9 0 0 1-18 0c0-5 3-8 5-11 1 3 2 5 4 6 0-5 0-9 0-13z"/><path d="M19 36h10M20 41h8"/></svg>
+          <h3><span class="en">Development</span><span class="th">พัฒนาและทำตัวอย่าง</span></h3>
+          <p class="pdesc">เราจัดทำเทียนตัวอย่างตามโจทย์ของคุณ เพื่อทดสอบกลิ่น เนื้อเทียน และการเผาไหม้ ก่อนผลิตจริง</p>
+          <ul class="pcard"><li>ลูกค้าส่งน้ำหอมและภาชนะมาเอง หรือให้ทางโรงงานจัดหาให้</li><li>ปรับสูตรและรายละเอียดจนลูกค้าพอใจ</li><li>ยืนยันตัวอย่างก่อนเริ่มผลิตทุกครั้ง</li></ul>
+        </li>
+        <li class="pstep">
+          <svg class="pi" viewBox="0 0 48 48" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 18h20v20a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4z"/><path d="M14 24h20"/><path d="M24 18v-4"/><path d="M24 14c1-2 2-3 2-5"/><path d="M30 31l-4 4-2-2" stroke-width="2.4"/></svg>
+          <h3><span class="en">Production & QC</span><span class="th">ผลิตและตรวจคุณภาพ</span></h3>
+          <p class="pdesc">ผลิตจากไขปาล์มด้วยการเทมือทีละชิ้น ตรวจสอบคุณภาพทุกขั้นตอนก่อนส่งมอบ</p>
+          <ul class="pcard"><li>สรุปรายละเอียดงาน ราคา และกำหนดส่งก่อนเริ่มผลิต</li><li>ระยะเวลาผลิตขึ้นกับรูปแบบและจำนวน แจ้งชัดเจนตั้งแต่ต้น</li><li>ตรวจผิวเทียน ไส้เทียน และการติดฉลากทุกชิ้น</li></ul>
+        </li>
+        <li class="pstep">
+          <svg class="pi" viewBox="0 0 48 48" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h24v20H4z"/><path d="M28 18h8l6 7v7H28"/><circle cx="12" cy="35" r="3.5"/><circle cx="34" cy="35" r="3.5"/></svg>
+          <h3><span class="en">Delivery</span><span class="th">ส่งมอบสินค้า</span></h3>
+          <p class="pdesc">แพ็กอย่างดีและจัดส่งตามวันที่ตกลง พร้อมดูแลหลังการขาย</p>
+          <ul class="pcard"><li>แจ้งลูกค้าเมื่อผลิตและตรวจ QC เสร็จ เพื่อนัดวันจัดส่ง</li><li>ดูแลลูกค้าทั้งในไทยและต่างประเทศ</li><li>พร้อมรับออเดอร์ต่อเนื่องสำหรับล็อตถัดไป</li></ul>
+        </li>
+      </ol>
     </div>
   </section>
 
