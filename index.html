@@ -347,11 +347,12 @@ nav.top a.here{color:var(--ember)}
 .thumbs figure{position:relative;margin:0;width:96px;height:96px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
 .thumbs img{width:100%;height:100%;object-fit:cover}
 .thumbs button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(23,58,35,.85);color:#fff;cursor:pointer;font-size:14px;line-height:24px;padding:0}
+.gsz .ti-box{width:100%;aspect-ratio:12/11;display:flex;align-items:flex-end;justify-content:center}
 .gsz .ti{width:100%;aspect-ratio:12/11;border-radius:10px;overflow:hidden;display:block}
 .gsz .ti img{width:100%;height:100%;object-fit:cover;mix-blend-mode:normal}
 .gsz.tin{grid-template-columns:repeat(4,minmax(0,1fr))}
 .gsz.tin .none{justify-content:center}
-@media (max-width:760px){.gsz.tin{grid-template-columns:repeat(2,minmax(0,1fr))}.gsz.tin .none{grid-column:auto}}
+@media (max-width:760px){.gsz.tin{grid-template-columns:repeat(2,minmax(0,1fr))}.gsz.tin .none{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -574,7 +575,8 @@ nav.top a.here{color:var(--ember)}
         <div class="gsz-wrap" id="tinWrap" hidden>
           <span>ขนาดกระป๋อง (โรงงานจัดหาให้ได้)</span>
           <div class="gsz tin" role="radiogroup" aria-label="ขนาดกระป๋อง">
-            <label><input type="radio" name="tin" value="กระปุกอลูมิเนียม 225 ml (Ø80 × สูง 52 mm)" id="tn-1"><span class="ti"><img src="tin-225.jpg" alt="กระปุกอลูมิเนียมมีฝา 225 ml"></span><b>225 ml</b><small>กระปุกอลูมิเนียม มีฝา<br>Ø 80 mm<br>สูง 52 mm</small></label>
+            <label><input type="radio" name="tin" value="กระปุกอลูมิเนียม 120 g (Ø65 × สูง 50 mm)" id="tn-2"><span class="ti-box"><span class="ti" style="width:81%"><img src="tin-225.jpg" alt="กระปุกอลูมิเนียมมีฝา 120 g"></span></span><b>120 g</b><small>กระปุกอลูมิเนียม มีฝา<br>Ø 65 mm<br>สูง 50 mm</small></label>
+            <label><input type="radio" name="tin" value="กระปุกอลูมิเนียม 225 ml (Ø80 × สูง 52 mm)" id="tn-1"><span class="ti-box"><span class="ti"><img src="tin-225.jpg" alt="กระปุกอลูมิเนียมมีฝา 225 ml"></span></span><b>225 ml</b><small>กระปุกอลูมิเนียม มีฝา<br>Ø 80 mm<br>สูง 52 mm</small></label>
             <label class="none"><input type="radio" name="tin" value="" id="tn-0" checked><b>ยังไม่แน่ใจ / แบบอื่น</b><small>คุยรายละเอียดกับฝ่ายขายได้</small></label>
           </div>
         </div>
