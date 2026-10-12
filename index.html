@@ -296,14 +296,6 @@ nav.top a.here{color:var(--ember)}
 .cpage .logos{display:flex;flex-wrap:wrap;justify-content:flex-start}
 .cpage .logos li{flex:0 0 calc((100% - 32px)/3)}
 @media (max-width:900px){.cpage .logos li{flex-basis:calc((100% - 16px)/2)}}
-.cpage .logos li.photo{position:relative;height:340px;padding:0;overflow:hidden;background:#E9E3DA}
-.cpage .logos li.photo .ph{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:50% 64%;mix-blend-mode:normal}
-.cpage .logos li.photo .ph2{animation:phx 9s ease-in-out infinite}
-@keyframes phx{0%,40%{opacity:0}50%,90%{opacity:1}100%{opacity:0}}
-.cpage .logos li.photo .lg{position:absolute;left:16px;top:16px;background:#fff;border-radius:12px;padding:10px 14px;line-height:0}
-.cpage .logos li.photo .lg img{height:30px;width:auto;max-height:none;mix-blend-mode:multiply}
-@media (max-width:900px){.cpage .logos li.photo{height:260px;flex-basis:100%}}
-@media (prefers-reduced-motion:reduce){.cpage .logos li.photo .ph2{animation:none;opacity:0}}
 </style>
 </head>
 <body>
@@ -631,7 +623,7 @@ nav.top a.here{color:var(--ember)}
         <li><img src="bodhi.png" alt="Bodhi" loading="lazy"></li>
         <li class="dark"><img src="pawis.png" alt="PAWIS" loading="lazy"></li>
         <li><img src="organictai.png" alt="Organic Tai" loading="lazy"></li>
-        <li class="photo"><img class="ph" src="sakara1.jpg" alt="เทียนหอม SAKARA ในแก้วสีดำ ผลิตโดย Pure Organic" loading="lazy"><img class="ph ph2" src="sakara2.jpg" alt="" loading="lazy"><span class="lg"><img src="sakara.png" alt="SAKARA"></span></li>
+        <li><img src="sakara.png" alt="SAKARA" loading="lazy"></li>
     </ul>
     <ul class="cfacts">
       <li><b>ตั้งแต่ 2540</b><span>ประสบการณ์ผลิตเทียนกว่า 29 ปี</span></li>
