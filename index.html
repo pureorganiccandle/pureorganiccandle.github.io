@@ -334,6 +334,19 @@ nav.top a.here{color:var(--ember)}
 .scn label.custom{border-style:dashed}
 @media (max-width:520px){.scn label.custom{grid-column:1/-1;flex-direction:row;justify-content:center;gap:10px;padding:8px}.scn label.custom .ci{width:32px;height:32px}}
 .scn-custom{margin-top:12px}
+.shp-wrap{margin-top:20px;padding-top:18px;border-top:1px dashed var(--line)}
+.shp-wrap>span{display:block;font-size:14px;font-weight:500}
+.shp-wrap>small{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 10px}
+.upl-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.upl{position:relative;width:96px;height:96px;border:1.5px dashed #B9BDB0;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--green);background:#fff}
+.upl:hover{border-color:var(--green)}
+.upl input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upl b{font-size:13px;font-weight:500}
+.upl.off{opacity:.4;pointer-events:none}
+.thumbs{display:flex;gap:10px;flex-wrap:wrap}
+.thumbs figure{position:relative;margin:0;width:96px;height:96px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(23,58,35,.85);color:#fff;cursor:pointer;font-size:14px;line-height:24px;padding:0}
 </style>
 </head>
 <body>
@@ -553,6 +566,16 @@ nav.top a.here{color:var(--ember)}
           <label class="chip"><input type="checkbox" name="type" value="เทียนแฟนซีประจำเทศกาล" id="t-festive"><img src="festive.jpg" alt=""><span>เทศกาล</span></label>
         </div>
         <p class="err" id="typeErr" hidden>เลือกอย่างน้อย 1 รูปแบบ</p>
+        <div class="shp-wrap" id="shapeWrap" hidden>
+          <span>รายละเอียดรูปทรงพิเศษ</span>
+          <small>อัปโหลดรูปตัวอย่าง (สูงสุด 3 รูป) และ/หรือ พิมพ์อธิบายรูปทรงที่ต้องการ</small>
+          <div class="upl-row">
+            <label class="upl"><input type="file" id="f-shape-img" accept="image/*" multiple><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg><b>เพิ่มรูป</b></label>
+            <div class="thumbs" id="shapeThumbs"></div>
+          </div>
+          <p class="err" id="imgErr" hidden></p>
+          <label class="f"><span>อธิบายรูปทรง</span><textarea id="f-shape" rows="3" placeholder="เช่น ทรงดอกบัว สูงประมาณ 8 ซม. สีขาวงาช้าง ใช้เป็นของชำร่วย"></textarea></label>
+        </div>
         <div class="gsz-wrap" id="glassWrap" hidden>
           <span>ขนาดแก้ว (โรงงานจัดหาให้ได้)</span>
           <div role="radiogroup" aria-label="ขนาดแก้ว">
@@ -788,6 +811,31 @@ nav.top a.here{color:var(--ember)}
   function csync(){cw.hidden=!cb.checked}
   scs.forEach(function(c){c.addEventListener('change',csync)}); ['sc-1','sc-3'].forEach(function(id){document.getElementById(id).addEventListener('change',csync)});
   function scentSel(){return [].filter.call(scs,function(c){return c.checked}).map(function(c){return c===cb&&v('f-custom')?'กลิ่นพิเศษ: '+v('f-custom'):c.value}).join(', ')}
+
+  /* ---- special shape: images + description ---- */
+  var sw=document.getElementById('shapeWrap'),ts=document.getElementById('t-shape'),fi=document.getElementById('f-shape-img'),th=document.getElementById('shapeThumbs'),ie=document.getElementById('imgErr'),upl=fi.parentNode;
+  var shapeImgs=[];
+  function ssync(){sw.hidden=!ts.checked}
+  ts.addEventListener('change',ssync); window.addEventListener('hashchange',ssync);
+  function drawThumbs(){
+    th.innerHTML='';
+    shapeImgs.forEach(function(im,i){var fg=document.createElement('figure');var g=document.createElement('img');g.src='data:image/jpeg;base64,'+im.data;g.alt='รูปอ้างอิง '+(i+1);var b=document.createElement('button');b.type='button';b.setAttribute('aria-label','ลบรูป');b.textContent='×';b.onclick=function(){shapeImgs.splice(i,1);drawThumbs()};fg.appendChild(g);fg.appendChild(b);th.appendChild(fg)});
+    upl.classList.toggle('off',shapeImgs.length>=3);
+  }
+  function shrink(file,cb){
+    var r=new FileReader();r.onload=function(){var g=new Image();g.onload=function(){var m=1400,w=g.width,h=g.height,s=Math.min(1,m/Math.max(w,h));var c=document.createElement('canvas');c.width=Math.round(w*s);c.height=Math.round(h*s);var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(g,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.82).split(',')[1])};g.onerror=function(){cb(null)};g.src=r.result};r.readAsDataURL(file);
+  }
+  fi.addEventListener('change',function(){
+    ie.hidden=true; var files=[].slice.call(fi.files||[]); fi.value='';
+    files.forEach(function(file){
+      if(!/^image\//.test(file.type)){ie.textContent='รองรับเฉพาะไฟล์รูปภาพ';ie.hidden=false;return}
+      if(shapeImgs.length>=3){ie.textContent='อัปโหลดได้สูงสุด 3 รูป';ie.hidden=false;return}
+      var slot={name:file.name,data:''};shapeImgs.push(slot);
+      shrink(file,function(d){if(d){slot.data=d}else{shapeImgs.splice(shapeImgs.indexOf(slot),1);ie.textContent='เปิดไฟล์ '+file.name+' ไม่ได้';ie.hidden=false}drawThumbs()});
+    });
+  });
+  function shapeText(){return ts.checked?v('f-shape'):''}
+  function shapeList(){return ts.checked?shapeImgs.filter(function(x){return x.data}).map(function(x){return {name:x.name,data:x.data}}):[]}
   function lidSel(){if(gw.hidden)return '';var r=f.querySelector('input[name="lid"]:checked');return r&&r.value?r.value:''}
   function radio(n){var r=f.querySelector('input[name="'+n+'"]:checked');return r?r.value:''}
   f.addEventListener('submit',function(e){
@@ -802,10 +850,10 @@ nav.top a.here{color:var(--ember)}
       'เบอร์โทร: '+v('f-phone'), 'อีเมล: '+v('f-email'), v('f-line')?'LINE: '+v('f-line'):null,'',
       'รูปแบบเทียน: '+types.join(', '),'ใช้สำหรับ: '+v('f-use'),'จำนวน: '+v('f-qty'),
       v('f-date')?'ต้องการรับของ: '+v('f-date'):null,'ติดโลโก้: '+v('f-logo'),
-      'น้ำหอม: '+radio('scent'),scentSel()?'กลิ่น: '+scentSel():null,'ภาชนะ: '+radio('vessel'),glassSize()?'ขนาดแก้ว: '+glassSize():null,lidSel()?'ฝาปิด: '+lidSel():null,
+      shapeText()?'รูปทรงพิเศษ: '+shapeText():null,shapeList().length?'รูปอ้างอิง: '+shapeList().length+' รูป':null,'น้ำหอม: '+radio('scent'),scentSel()?'กลิ่น: '+scentSel():null,'ภาชนะ: '+radio('vessel'),glassSize()?'ขนาดแก้ว: '+glassSize():null,lidSel()?'ฝาปิด: '+lidSel():null,
       v('f-note')?'\nรายละเอียดเพิ่มเติม:\n'+v('f-note'):null].filter(function(x){return x!==null});
     var text=lines.join('\n'); sum.textContent=text;
-    window._order={name:v('f-name'),brand:v('f-brand'),phone:v('f-phone'),email:v('f-email'),line:v('f-line'),types:types.join(', '),use:v('f-use'),qty:v('f-qty'),date:v('f-date'),logo:v('f-logo'),scent:radio('scent')+(scentSel()?' · '+scentSel():''),vessel:radio('vessel')+(glassSize()?' · '+glassSize():'')+(lidSel()?' · '+lidSel():''),note:v('f-note')};
+    window._order={name:v('f-name'),brand:v('f-brand'),phone:v('f-phone'),email:v('f-email'),line:v('f-line'),types:types.join(', '),use:v('f-use'),qty:v('f-qty'),date:v('f-date'),logo:v('f-logo'),scent:radio('scent')+(scentSel()?' · '+scentSel():''),vessel:radio('vessel')+(glassSize()?' · '+glassSize():'')+(lidSel()?' · '+lidSel():''),note:v('f-note'),shape:shapeText(),images:shapeList()};
     setState('confirm');
     res.hidden=false; res.focus(); res.scrollIntoView({behavior:'smooth',block:'start'});
   });
@@ -831,7 +879,7 @@ nav.top a.here{color:var(--ember)}
     if(!window._order) return;
     if(!SHEET_URL){setState('fail');return}
     setState('sending');
-    var ctl=window.AbortController?new AbortController():null; var tm=setTimeout(function(){ctl&&ctl.abort()},20000);
+    var ctl=window.AbortController?new AbortController():null; var tm=setTimeout(function(){ctl&&ctl.abort()},60000);
     fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(window._order),signal:ctl?ctl.signal:undefined})
       .then(function(){clearTimeout(tm);setState('done')})
       .catch(function(){clearTimeout(tm);setState('fail')});
@@ -841,7 +889,7 @@ nav.top a.here{color:var(--ember)}
     function sel(){var r=document.createRange();r.selectNodeContents(sum);var s=getSelection();s.removeAllRanges();s.addRange(r)}
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,sel)}else sel();
   });
-  route(); gsync();
+  route(); gsync(); ssync();
 
   /* ---- hand-poured slideshow ---- */
   (function(){var t=document.getElementById('pourTile');if(!t)return;var s=t.querySelectorAll('.slide'),d=t.querySelectorAll('.dots i'),i=0;
