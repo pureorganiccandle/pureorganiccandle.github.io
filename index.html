@@ -293,6 +293,9 @@ body.on-clients nav.top{margin-bottom:0;background:rgba(251,246,240,.85)}
 .ccta .ghost-l:hover{border-color:#FBF6F0}
 nav.top a.here{color:var(--ember)}
 @media (max-width:900px){.cpage .logos{grid-template-columns:repeat(2,minmax(0,1fr))}.cpage .logos li{height:150px}.cfacts{grid-template-columns:1fr}.ccta{padding:32px 24px}}
+.cpage .logos{display:flex;flex-wrap:wrap;justify-content:center}
+.cpage .logos li{flex:0 0 calc((100% - 32px)/3)}
+@media (max-width:900px){.cpage .logos li{flex-basis:calc((100% - 16px)/2)}}
 </style>
 </head>
 <body>
@@ -620,6 +623,7 @@ nav.top a.here{color:var(--ember)}
         <li><img src="bodhi.png" alt="Bodhi" loading="lazy"></li>
         <li class="dark"><img src="pawis.png" alt="PAWIS" loading="lazy"></li>
         <li><img src="organictai.png" alt="Organic Tai" loading="lazy"></li>
+        <li><img src="sakara.png" alt="SAKARA" loading="lazy"></li>
     </ul>
     <ul class="cfacts">
       <li><b>ตั้งแต่ 2540</b><span>ประสบการณ์ผลิตเทียนกว่า 29 ปี</span></li>
