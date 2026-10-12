@@ -296,7 +296,7 @@ nav.top a.here{color:var(--ember)}
 .cpage .logos{display:flex;flex-wrap:wrap;justify-content:flex-start}
 .cpage .logos li{flex:0 0 calc((100% - 32px)/3)}
 @media (max-width:900px){.cpage .logos li{flex-basis:calc((100% - 16px)/2)}}
-.gsz-wrap{margin-top:4px}
+.gsz-wrap{margin-top:20px;padding-top:18px;border-top:1px dashed var(--line)}
 .gsz-wrap>span{display:block;font-size:14px;font-weight:500;margin-bottom:8px}
 .gsz{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 @media (max-width:760px){.gsz{grid-template-columns:repeat(2,minmax(0,1fr))}.gsz.gnone{grid-template-columns:1fr}}
@@ -534,6 +534,24 @@ nav.top a.here{color:var(--ember)}
           <label class="chip"><input type="checkbox" name="type" value="เทียนแฟนซีประจำเทศกาล" id="t-festive"><img src="festive.jpg" alt=""><span>เทศกาล</span></label>
         </div>
         <p class="err" id="typeErr" hidden>เลือกอย่างน้อย 1 รูปแบบ</p>
+        <div class="gsz-wrap" id="glassWrap" hidden>
+          <span>ขนาดแก้ว (โรงงานจัดหาให้ได้)</span>
+          <div role="radiogroup" aria-label="ขนาดแก้ว">
+          <span class="gk">แก้วขุ่น</span>
+          <div class="gsz">
+            <label><input type="radio" name="glass" value="แก้วขุ่น 2.6 oz (75 ml) Ø51 × สูง 62 mm" id="gl-1"><span class="gi"><img src="glass-frost.png" alt="" style="height:70px;width:58px"></span><b>2.6 oz</b><small>75 ml<br>Ø 51 mm<br>สูง 62 mm</small></label>
+            <label><input type="radio" name="glass" value="แก้วขุ่น 4.2 oz (120 ml) Ø61.5 × สูง 63.5 mm" id="gl-2"><span class="gi"><img src="glass-frost.png" alt="" style="height:72px;width:69px"></span><b>4.2 oz</b><small>120 ml<br>Ø 61.5 mm<br>สูง 63.5 mm</small></label>
+            <label><input type="radio" name="glass" value="แก้วขุ่น 8.9 oz (255 ml) Ø75.5 × สูง 85 mm" id="gl-3"><span class="gi"><img src="glass-frost.png" alt="" style="height:96px;width:85px"></span><b>8.9 oz</b><small>255 ml<br>Ø 75.5 mm<br>สูง 85 mm</small></label>
+            <label><input type="radio" name="glass" value="แก้วขุ่น 10.8 oz (310 ml) Ø80 × สูง 90 mm" id="gl-4"><span class="gi"><img src="glass-frost.png" alt="" style="height:102px;width:90px"></span><b>10.8 oz</b><small>310 ml<br>Ø 80 mm<br>สูง 90 mm</small></label>
+          </div>
+          <span class="gk">แก้วดำ</span>
+          <div class="gsz">
+            <label><input type="radio" name="glass" value="แก้วดำ 4.2 oz (120 ml) Ø61.5 × สูง 63.5 mm" id="gl-5"><span class="gi"><img src="glass-black.png" alt="" style="height:72px;width:69px"></span><b>4.2 oz</b><small>120 ml<br>Ø 61.5 mm<br>สูง 63.5 mm</small></label>
+            <label><input type="radio" name="glass" value="แก้วดำ 8.9 oz (255 ml) Ø75.5 × สูง 85 mm" id="gl-6"><span class="gi"><img src="glass-black.png" alt="" style="height:96px;width:85px"></span><b>8.9 oz</b><small>255 ml<br>Ø 75.5 mm<br>สูง 85 mm</small></label>
+          </div>
+          <div class="gsz gnone"><label class="none"><input type="radio" name="glass" value="" id="gl-0" checked><b>ยังไม่แน่ใจ / แก้วแบบอื่น</b><small>คุยรายละเอียดกับฝ่ายขายได้</small></label></div>
+          </div>
+        </div>
       </fieldset>
 
       <fieldset>
@@ -571,24 +589,6 @@ nav.top a.here{color:var(--ember)}
             <div class="seg"><label><input type="radio" name="scent" value="ลูกค้าส่งน้ำหอมให้" checked id="sc-1"><span>ส่งให้ทางเรา</span></label><label><input type="radio" name="scent" value="ให้ Pure Organic จัดเตรียม" id="sc-2"><span>ให้ทางเราจัดเตรียม</span></label><label><input type="radio" name="scent" value="ไม่ใส่กลิ่น" id="sc-3"><span>ไม่ใส่กลิ่น</span></label></div></div>
           <div class="f"><span>ภาชนะ (แก้ว / กระป๋อง)</span>
             <div class="seg"><label><input type="radio" name="vessel" value="ลูกค้าส่งภาชนะให้" checked id="vs-1"><span>ส่งให้ทางเรา</span></label><label><input type="radio" name="vessel" value="ให้ Pure Organic จัดเตรียม" id="vs-2"><span>ให้ทางเราจัดเตรียม</span></label><label><input type="radio" name="vessel" value="ใช้ถ้วยทีไลท์" id="vs-3"><span>ใช้ถ้วยทีไลท์</span></label></div></div>
-        </div>
-        <div class="gsz-wrap" id="glassWrap" hidden>
-          <span>ขนาดแก้ว (โรงงานจัดหาให้ได้)</span>
-          <div role="radiogroup" aria-label="ขนาดแก้ว">
-          <span class="gk">แก้วขุ่น</span>
-          <div class="gsz">
-            <label><input type="radio" name="glass" value="แก้วขุ่น 2.6 oz (75 ml) Ø51 × สูง 62 mm" id="gl-1"><span class="gi"><img src="glass-frost.png" alt="" style="height:70px;width:58px"></span><b>2.6 oz</b><small>75 ml<br>Ø 51 mm<br>สูง 62 mm</small></label>
-            <label><input type="radio" name="glass" value="แก้วขุ่น 4.2 oz (120 ml) Ø61.5 × สูง 63.5 mm" id="gl-2"><span class="gi"><img src="glass-frost.png" alt="" style="height:72px;width:69px"></span><b>4.2 oz</b><small>120 ml<br>Ø 61.5 mm<br>สูง 63.5 mm</small></label>
-            <label><input type="radio" name="glass" value="แก้วขุ่น 8.9 oz (255 ml) Ø75.5 × สูง 85 mm" id="gl-3"><span class="gi"><img src="glass-frost.png" alt="" style="height:96px;width:85px"></span><b>8.9 oz</b><small>255 ml<br>Ø 75.5 mm<br>สูง 85 mm</small></label>
-            <label><input type="radio" name="glass" value="แก้วขุ่น 10.8 oz (310 ml) Ø80 × สูง 90 mm" id="gl-4"><span class="gi"><img src="glass-frost.png" alt="" style="height:102px;width:90px"></span><b>10.8 oz</b><small>310 ml<br>Ø 80 mm<br>สูง 90 mm</small></label>
-          </div>
-          <span class="gk">แก้วดำ</span>
-          <div class="gsz">
-            <label><input type="radio" name="glass" value="แก้วดำ 4.2 oz (120 ml) Ø61.5 × สูง 63.5 mm" id="gl-5"><span class="gi"><img src="glass-black.png" alt="" style="height:72px;width:69px"></span><b>4.2 oz</b><small>120 ml<br>Ø 61.5 mm<br>สูง 63.5 mm</small></label>
-            <label><input type="radio" name="glass" value="แก้วดำ 8.9 oz (255 ml) Ø75.5 × สูง 85 mm" id="gl-6"><span class="gi"><img src="glass-black.png" alt="" style="height:96px;width:85px"></span><b>8.9 oz</b><small>255 ml<br>Ø 75.5 mm<br>สูง 85 mm</small></label>
-          </div>
-          <div class="gsz gnone"><label class="none"><input type="radio" name="glass" value="" id="gl-0" checked><b>ยังไม่แน่ใจ / แก้วแบบอื่น</b><small>คุยรายละเอียดกับฝ่ายขายได้</small></label></div>
-          </div>
         </div>
         <label class="f"><span>รายละเอียดเพิ่มเติม</span><textarea id="f-note" name="note" rows="4" placeholder="เช่น ขนาดเทียน สีเทียน กลิ่นที่อยากได้ ธีมงาน หรือแบรนด์อ้างอิง"></textarea></label>
       </fieldset>
