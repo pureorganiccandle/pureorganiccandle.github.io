@@ -318,6 +318,19 @@ nav.top a.here{color:var(--ember)}
 .seg .sw{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:-1px;border:1px solid rgba(0,0,0,.15)}
 .seg .sw.wood{background:linear-gradient(135deg,#C99A64,#8A5A2E)}
 .seg .sw.steel{background:linear-gradient(135deg,#F2F3F4,#9EA3A8)}
+.scn-wrap{margin:4px 0 18px}
+.scn-wrap>span{display:block;font-size:14px;font-weight:500;margin-bottom:4px}
+.scn-wrap>small{display:block;font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.scn{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}
+.scn label{position:relative;cursor:pointer;border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;transition:border-color .15s}
+.scn input{position:absolute;left:0;top:0;opacity:0;pointer-events:none}
+.scn img{width:44px;height:44px;mix-blend-mode:multiply}
+.scn b{font-family:Archivo,Prompt,sans-serif;font-size:10px;letter-spacing:.02em;text-transform:uppercase;font-weight:700}
+.scn em{font-style:normal;font-size:12px;color:var(--muted)}
+.scn label:has(input:checked){border-color:var(--green);box-shadow:0 0 0 3px rgba(47,107,66,.15)}
+.scn input:focus-visible+img{outline:2px solid var(--ember);outline-offset:2px}
+@media (max-width:900px){.scn{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:520px){.scn{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -602,6 +615,21 @@ nav.top a.here{color:var(--ember)}
           <div class="f"><span>ภาชนะ (แก้ว / กระป๋อง)</span>
             <div class="seg"><label><input type="radio" name="vessel" value="ลูกค้าส่งภาชนะให้" checked id="vs-1"><span>ส่งให้ทางเรา</span></label><label><input type="radio" name="vessel" value="ให้ Pure Organic จัดเตรียม" id="vs-2"><span>ให้ทางเราจัดเตรียม</span></label><label><input type="radio" name="vessel" value="ใช้ถ้วยทีไลท์" id="vs-3"><span>ใช้ถ้วยทีไลท์</span></label></div></div>
         </div>
+        <div class="scn-wrap">
+          <span>กลิ่นเบื้องต้นจากโรงงาน</span>
+          <small>เลือกได้มากกว่า 1 กลิ่น หรือแจ้งกลิ่นที่ต้องการในรายละเอียดเพิ่มเติม</small>
+          <div class="scn" role="group" aria-label="กลิ่นเบื้องต้น">
+            <label><input type="checkbox" name="bscent" value="Rose (กุหลาบ)" id="bs-rose"><img src="scent-rose.png" alt=""><b>Rose</b><em>กุหลาบ</em></label>
+            <label><input type="checkbox" name="bscent" value="Vanilla (วานิลลา)" id="bs-vanilla"><img src="scent-vanilla.png" alt=""><b>Vanilla</b><em>วานิลลา</em></label>
+            <label><input type="checkbox" name="bscent" value="Lavender (ลาเวนเดอร์)" id="bs-lavender"><img src="scent-lavender.png" alt=""><b>Lavender</b><em>ลาเวนเดอร์</em></label>
+            <label><input type="checkbox" name="bscent" value="Lemongrass (ตะไคร้)" id="bs-lemongrass"><img src="scent-lemongrass.png" alt=""><b>Lemongrass</b><em>ตะไคร้</em></label>
+            <label><input type="checkbox" name="bscent" value="Orange (ส้ม)" id="bs-orange"><img src="scent-orange.png" alt=""><b>Orange</b><em>ส้ม</em></label>
+            <label><input type="checkbox" name="bscent" value="Peach (พีช)" id="bs-peach"><img src="scent-peach.png" alt=""><b>Peach</b><em>พีช</em></label>
+            <label><input type="checkbox" name="bscent" value="Jasmine (มะลิ)" id="bs-jasmine"><img src="scent-jasmine.png" alt=""><b>Jasmine</b><em>มะลิ</em></label>
+            <label><input type="checkbox" name="bscent" value="Frangipani (ลีลาวดี)" id="bs-frangipani"><img src="scent-frangipani.png" alt=""><b>Frangipani</b><em>ลีลาวดี</em></label>
+            <label><input type="checkbox" name="bscent" value="Pandan (ใบเตย)" id="bs-pandan"><img src="scent-pandan.png" alt=""><b>Pandan</b><em>ใบเตย</em></label>
+          </div>
+        </div>
         <label class="f"><span>รายละเอียดเพิ่มเติม</span><textarea id="f-note" name="note" rows="4" placeholder="เช่น ขนาดเทียน สีเทียน กลิ่นที่อยากได้ ธีมงาน หรือแบรนด์อ้างอิง"></textarea></label>
       </fieldset>
 
@@ -746,6 +774,12 @@ nav.top a.here{color:var(--ember)}
   function gsync(){gw.hidden=!tg.checked}
   tg.addEventListener('change',gsync); f.querySelectorAll('input[name="glass"]').forEach(function(r){r.addEventListener('change',function(){if(r.value)document.getElementById('vs-2').checked=true})}); window.addEventListener('hashchange',gsync); gsync();
   function glassSize(){if(gw.hidden)return '';var r=f.querySelector('input[name="glass"]:checked');return r&&r.value?r.value:''}
+
+  /* ---- base scents ---- */
+  var scs=f.querySelectorAll('input[name="bscent"]');
+  scs.forEach(function(c){c.addEventListener('change',function(){if(c.checked)document.getElementById('sc-2').checked=true})});
+  ['sc-1','sc-3'].forEach(function(id){document.getElementById(id).addEventListener('change',function(){scs.forEach(function(c){c.checked=false})})});
+  function scentSel(){return [].filter.call(scs,function(c){return c.checked}).map(function(c){return c.value}).join(', ')}
   function lidSel(){if(gw.hidden)return '';var r=f.querySelector('input[name="lid"]:checked');return r&&r.value?r.value:''}
   function radio(n){var r=f.querySelector('input[name="'+n+'"]:checked');return r?r.value:''}
   f.addEventListener('submit',function(e){
@@ -760,10 +794,10 @@ nav.top a.here{color:var(--ember)}
       'เบอร์โทร: '+v('f-phone'), 'อีเมล: '+v('f-email'), v('f-line')?'LINE: '+v('f-line'):null,'',
       'รูปแบบเทียน: '+types.join(', '),'ใช้สำหรับ: '+v('f-use'),'จำนวน: '+v('f-qty'),
       v('f-date')?'ต้องการรับของ: '+v('f-date'):null,'ติดโลโก้: '+v('f-logo'),
-      'น้ำหอม: '+radio('scent'),'ภาชนะ: '+radio('vessel'),glassSize()?'ขนาดแก้ว: '+glassSize():null,lidSel()?'ฝาปิด: '+lidSel():null,
+      'น้ำหอม: '+radio('scent'),scentSel()?'กลิ่น: '+scentSel():null,'ภาชนะ: '+radio('vessel'),glassSize()?'ขนาดแก้ว: '+glassSize():null,lidSel()?'ฝาปิด: '+lidSel():null,
       v('f-note')?'\nรายละเอียดเพิ่มเติม:\n'+v('f-note'):null].filter(function(x){return x!==null});
     var text=lines.join('\n'); sum.textContent=text;
-    window._order={name:v('f-name'),brand:v('f-brand'),phone:v('f-phone'),email:v('f-email'),line:v('f-line'),types:types.join(', '),use:v('f-use'),qty:v('f-qty'),date:v('f-date'),logo:v('f-logo'),scent:radio('scent'),vessel:radio('vessel')+(glassSize()?' · '+glassSize():'')+(lidSel()?' · '+lidSel():''),note:v('f-note')};
+    window._order={name:v('f-name'),brand:v('f-brand'),phone:v('f-phone'),email:v('f-email'),line:v('f-line'),types:types.join(', '),use:v('f-use'),qty:v('f-qty'),date:v('f-date'),logo:v('f-logo'),scent:radio('scent')+(scentSel()?' · '+scentSel():''),vessel:radio('vessel')+(glassSize()?' · '+glassSize():'')+(lidSel()?' · '+lidSel():''),note:v('f-note')};
     setState('confirm');
     res.hidden=false; res.focus(); res.scrollIntoView({behavior:'smooth',block:'start'});
   });
