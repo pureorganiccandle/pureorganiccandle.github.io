@@ -321,7 +321,7 @@ nav.top a.here{color:var(--ember)}
 .scn-wrap{margin:4px 0 18px}
 .scn-wrap>span{display:block;font-size:14px;font-weight:500;margin-bottom:4px}
 .scn-wrap>small{display:block;font-size:12.5px;color:var(--muted);margin-bottom:10px}
-.scn{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}
+.scn{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 .scn label{position:relative;cursor:pointer;border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;transition:border-color .15s}
 .scn input{position:absolute;left:0;top:0;opacity:0;pointer-events:none}
 .scn img{width:44px;height:44px;mix-blend-mode:multiply}
@@ -329,8 +329,11 @@ nav.top a.here{color:var(--ember)}
 .scn em{font-style:normal;font-size:12px;color:var(--muted)}
 .scn label:has(input:checked){border-color:var(--green);box-shadow:0 0 0 3px rgba(47,107,66,.15)}
 .scn input:focus-visible+img{outline:2px solid var(--ember);outline-offset:2px}
-@media (max-width:900px){.scn{grid-template-columns:repeat(5,minmax(0,1fr))}}
+
 @media (max-width:520px){.scn{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.scn label.custom{border-style:dashed}
+@media (max-width:520px){.scn label.custom{grid-column:1/-1;flex-direction:row;justify-content:center;gap:10px;padding:8px}.scn label.custom .ci{width:32px;height:32px}}
+.scn-custom{margin-top:12px}
 </style>
 </head>
 <body>
@@ -628,7 +631,9 @@ nav.top a.here{color:var(--ember)}
             <label><input type="checkbox" name="bscent" value="Jasmine (มะลิ)" id="bs-jasmine"><img src="scent-jasmine.png" alt=""><b>Jasmine</b><em>มะลิ</em></label>
             <label><input type="checkbox" name="bscent" value="Frangipani (ลีลาวดี)" id="bs-frangipani"><img src="scent-frangipani.png" alt=""><b>Frangipani</b><em>ลีลาวดี</em></label>
             <label><input type="checkbox" name="bscent" value="Pandan (ใบเตย)" id="bs-pandan"><img src="scent-pandan.png" alt=""><b>Pandan</b><em>ใบเตย</em></label>
+            <label class="custom"><input type="checkbox" name="bscent" value="กลิ่นพิเศษ" id="bs-custom"><svg class="ci" width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><path d="M22 6l3.6 9.4L35 19l-9.4 3.6L22 32l-3.6-9.4L9 19l9.4-3.6z" fill="#E8B04A"/><path d="M34 28l1.6 4.2L40 34l-4.4 1.8L34 40l-1.6-4.2L28 34l4.4-1.8z" fill="#2F6B42"/><circle cx="10" cy="34" r="2.6" fill="#C0561A"/></svg><b>Special</b><em>กลิ่นพิเศษ</em></label>
           </div>
+          <label class="f scn-custom" id="customWrap" hidden><span>กลิ่นพิเศษที่ต้องการ</span><input id="f-custom" placeholder="เช่น กลิ่นไม้กฤษณา, กลิ่นแนวโรงแรม, หรือกลิ่นตามแบรนด์อ้างอิง"></label>
         </div>
         <label class="f"><span>รายละเอียดเพิ่มเติม</span><textarea id="f-note" name="note" rows="4" placeholder="เช่น ขนาดเทียน สีเทียน กลิ่นที่อยากได้ ธีมงาน หรือแบรนด์อ้างอิง"></textarea></label>
       </fieldset>
@@ -779,7 +784,10 @@ nav.top a.here{color:var(--ember)}
   var scs=f.querySelectorAll('input[name="bscent"]');
   scs.forEach(function(c){c.addEventListener('change',function(){if(c.checked)document.getElementById('sc-2').checked=true})});
   ['sc-1','sc-3'].forEach(function(id){document.getElementById(id).addEventListener('change',function(){scs.forEach(function(c){c.checked=false})})});
-  function scentSel(){return [].filter.call(scs,function(c){return c.checked}).map(function(c){return c.value}).join(', ')}
+  var cw=document.getElementById('customWrap'),cb=document.getElementById('bs-custom');
+  function csync(){cw.hidden=!cb.checked}
+  scs.forEach(function(c){c.addEventListener('change',csync)}); ['sc-1','sc-3'].forEach(function(id){document.getElementById(id).addEventListener('change',csync)});
+  function scentSel(){return [].filter.call(scs,function(c){return c.checked}).map(function(c){return c===cb&&v('f-custom')?'กลิ่นพิเศษ: '+v('f-custom'):c.value}).join(', ')}
   function lidSel(){if(gw.hidden)return '';var r=f.querySelector('input[name="lid"]:checked');return r&&r.value?r.value:''}
   function radio(n){var r=f.querySelector('input[name="'+n+'"]:checked');return r?r.value:''}
   f.addEventListener('submit',function(e){
