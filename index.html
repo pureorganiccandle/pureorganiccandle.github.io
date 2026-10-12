@@ -351,7 +351,7 @@ nav.top a.here{color:var(--ember)}
 .gsz .ti{width:100%;aspect-ratio:12/11;border-radius:10px;overflow:hidden;display:block}
 .gsz .ti img{width:100%;height:100%;object-fit:cover;mix-blend-mode:normal}
 .gsz.tin{grid-template-columns:repeat(4,minmax(0,1fr))}
-.gsz.tin .none{justify-content:center}
+.gsz.tin .none{justify-content:center;grid-column:1/-1;flex-direction:row;gap:10px;padding:12px}
 @media (max-width:760px){.gsz.tin{grid-template-columns:repeat(2,minmax(0,1fr))}.gsz.tin .none{grid-column:1/-1}}
 </style>
 </head>
@@ -576,6 +576,7 @@ nav.top a.here{color:var(--ember)}
           <span>ขนาดกระป๋อง (โรงงานจัดหาให้ได้)</span>
           <div class="gsz tin" role="radiogroup" aria-label="ขนาดกระป๋อง">
             <label><input type="radio" name="tin" value="ตลับอลูมิเนียมฝาเกลียว 60 ml (Ø68 × สูง 25 mm)" id="tn-3"><span class="ti-box"><span class="ti" style="width:85%"><img src="tin-60.jpg" alt="ตลับอลูมิเนียมฝาเกลียว 60 ml"></span></span><b>60 ml</b><small>ตลับอลูมิเนียม ฝาเกลียว<br>Ø 68 mm<br>สูง 25 mm</small></label>
+            <label><input type="radio" name="tin" value="ตลับอลูมิเนียมฝาเกลียว 100 g (Ø83 × สูง 25 mm)" id="tn-4"><span class="ti-box"><span class="ti"><img src="tin-60.jpg" alt="ตลับอลูมิเนียมฝาเกลียว 100 g"></span></span><b>100 g</b><small>ตลับอลูมิเนียม ฝาเกลียว<br>Ø 83 mm<br>สูง 25 mm</small></label>
             <label><input type="radio" name="tin" value="กระปุกอลูมิเนียม 120 g (Ø65 × สูง 50 mm)" id="tn-2"><span class="ti-box"><span class="ti" style="width:81%"><img src="tin-225.jpg" alt="กระปุกอลูมิเนียมมีฝา 120 g"></span></span><b>120 g</b><small>กระปุกอลูมิเนียม มีฝา<br>Ø 65 mm<br>สูง 50 mm</small></label>
             <label><input type="radio" name="tin" value="กระปุกอลูมิเนียม 225 ml (Ø80 × สูง 52 mm)" id="tn-1"><span class="ti-box"><span class="ti"><img src="tin-225.jpg" alt="กระปุกอลูมิเนียมมีฝา 225 ml"></span></span><b>225 ml</b><small>กระปุกอลูมิเนียม มีฝา<br>Ø 80 mm<br>สูง 52 mm</small></label>
             <label class="none"><input type="radio" name="tin" value="" id="tn-0" checked><b>ยังไม่แน่ใจ / แบบอื่น</b><small>คุยรายละเอียดกับฝ่ายขายได้</small></label>
