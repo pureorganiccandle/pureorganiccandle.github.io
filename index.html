@@ -818,7 +818,8 @@ nav.top a.here{color:var(--ember)}
   var f=document.getElementById('orderForm'),res=document.getElementById('result'),sum=document.getElementById('summary');
   function v(id){return document.getElementById(id).value.trim()}
   var gw=document.getElementById('glassWrap'),tg=document.getElementById('t-glass');
-  function gsync(){gw.hidden=!tg.checked}
+  function gsync(){gw.hidden=!(tg.checked&&document.getElementById('vs-2').checked)}
+  f.querySelectorAll('input[name="vessel"]').forEach(function(r){r.addEventListener('change',function(){gsync();if(typeof tsync==='function')tsync()})});
   tg.addEventListener('change',gsync); f.querySelectorAll('input[name="glass"]').forEach(function(r){r.addEventListener('change',function(){if(r.value)document.getElementById('vs-2').checked=true})}); window.addEventListener('hashchange',gsync); gsync();
   function glassSize(){if(gw.hidden)return '';var r=f.querySelector('input[name="glass"]:checked');return r&&r.value?r.value:''}
 
@@ -858,7 +859,7 @@ nav.top a.here{color:var(--ember)}
 
   /* ---- tin size ---- */
   var tw=document.getElementById('tinWrap'),tt=document.getElementById('t-tin');
-  function tsync(){tw.hidden=!tt.checked}
+  function tsync(){tw.hidden=!(tt.checked&&document.getElementById('vs-2').checked)}
   tt.addEventListener('change',tsync); window.addEventListener('hashchange',tsync);
   f.querySelectorAll('input[name="tin"]').forEach(function(r){r.addEventListener('change',function(){if(r.value)document.getElementById('vs-2').checked=true})});
   function tinSel(){if(tw.hidden)return '';var r=f.querySelector('input[name="tin"]:checked');return r&&r.value?r.value:''}
