@@ -925,5 +925,23 @@ nav.top a.here{color:var(--ember)}
 })();
 </script>
 
+<script>
+/* นับผู้เข้าชม -> Google Sheet แท็บ "ผู้เข้าชม" (นับ 1 ครั้งต่อการเข้าเว็บ 1 รอบ; เปิด ?notrack=1 เพื่อไม่นับเครื่องตัวเอง) */
+(function(){try{
+  var q=location.search, ua=navigator.userAgent||'';
+  if(/[?&]notrack/.test(q)) localStorage.setItem('po_notrack','1');
+  if(/[?&]track/.test(q)) localStorage.removeItem('po_notrack');
+  if(localStorage.getItem('po_notrack')) return;
+  if(/bot|crawl|spider|slurp|preview|lighthouse/i.test(ua)) return;
+  if(sessionStorage.getItem('po_v')) return; sessionStorage.setItem('po_v','1');
+  var first=false, vid=localStorage.getItem('po_vid');
+  if(!vid){vid=Date.now().toString(36)+Math.random().toString(36).slice(2,8); localStorage.setItem('po_vid',vid); first=true;}
+  var p=new URLSearchParams(q), ref=document.referrer||'';
+  try{ if(ref && new URL(ref).host===location.host) ref=''; }catch(e){}
+  var dev=/iPad|Tablet/i.test(ua)?'แท็บเล็ต':(/Mobi|Android|iPhone/i.test(ua)?'มือถือ':'คอมพิวเตอร์');
+  var d={type:'visit',page:location.pathname+location.hash,ref:ref,src:p.get('utm_source')||'',camp:p.get('utm_campaign')||'',device:dev,lang:navigator.language||'',vid:vid,first:first};
+  fetch('https://script.google.com/macros/s/AKfycbyPlHXI672eyUXkPJJX38LHb4zoCz5kITzQABwvG9W9CzWkb29Jqy7gqaKSCbbga_xu8A/exec',{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d)}).catch(function(){});
+}catch(e){}})();
+</script>
 </body>
 </html>
