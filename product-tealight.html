@@ -445,6 +445,11 @@ nav.top a.here{color:var(--ember)}
 .buy:hover{background:#0F2A18}
 .buy .tot{background:rgba(255,255,255,.14);border-radius:999px;padding:7px 14px;font-family:var(--f-label);font-weight:600;letter-spacing:.02em}
 .buynote{font-size:13px;color:var(--muted);margin:10px 4px 0}
+.oem{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;border:1.5px solid var(--forest);border-radius:999px;padding:10px 10px 10px 24px;text-decoration:none;color:var(--forest);background:#fff;transition:background .2s}
+.oem:hover{background:#F1F6F1}
+.oem b{display:block;font-weight:500;font-size:15.5px}
+.oem small{display:block;font-size:12.5px;color:var(--muted)}
+.oem i{width:34px;height:34px;border-radius:50%;background:var(--mint);display:grid;place-items:center;flex:none}
 .trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
 .trust div{display:flex;align-items:center;gap:10px;font-size:13px;line-height:1.35;color:var(--ink)}
 .trust i{width:34px;height:34px;border-radius:50%;background:var(--mint);color:var(--forest);display:grid;place-items:center;flex:none}
@@ -574,6 +579,7 @@ nav.top a.here{color:var(--ember)}
             <button type="button" class="buy" id="buyBtn"><span>สั่งซื้อ</span><span class="tot" id="buyTot">฿70</span></button>
           </div>
           <p class="buynote" id="sumLine">1 กล่อง 35 บาท + ค่าส่ง 35 บาท</p>
+          <a class="oem" href="index.html#order-tealight"><span><b>สั่งผลิต OEM</b><small>ทำแบรนด์ของคุณ ติดโลโก้ เลือกกลิ่น · ขั้นต่ำ 10 ชิ้นต่อแบบ</small></span><i aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></i></a>
           <div class="trust">
             <div><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg></i>จัดส่งทั่วประเทศ</div>
             <div><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-5 9 5M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></i>โอนผ่านธนาคาร แนบสลิปออนไลน์</div>
