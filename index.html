@@ -63,7 +63,7 @@ nav.top.scrolled{background:rgba(251,246,240,.5);border-bottom-color:rgba(0,0,0,
 .bar .links .sub a{display:flex;flex-direction:column;padding:8px 12px;border-radius:10px;line-height:1.3}
 .bar .links .sub a small{font-size:12px;color:var(--muted)}
 .bar .links .sub .all a{color:var(--green);font-size:14px;border-top:1px solid #EFE8DC;border-radius:0 0 10px 10px;margin-top:4px}
-.pcard.flash{outline:2px solid var(--green);outline-offset:-2px}
+.pcard .plink{color:inherit;text-decoration:none}.pcard .plink:hover{text-decoration:underline;text-underline-offset:3px}
 .bar .call{display:inline-flex;align-items:center;justify-content:center;background:var(--forest);color:#fff;border-radius:50%;width:44px;height:44px;padding:0;flex:none;text-decoration:none;font-size:15px;white-space:nowrap}
 .bar .call b{font-family:var(--f-label);font-weight:600;letter-spacing:.03em}
 .bar .call .dot{background:transparent;color:#fff;width:auto;height:auto}
@@ -378,7 +378,7 @@ nav.top a.here{color:var(--ember)}
       <div class="bar">
         <a class="logo" href="#top" aria-label="Pure Organic หน้าแรก"><img src="logo-green.png" alt="Pure Organic" width="122" height="30"></a>
         <ul class="links">
-          <li class="has-sub"><a href="#formats" aria-haspopup="true">Product <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a><ul class="sub"><li><a href="#p-tealight" data-prod="p-tealight"><span>เทียนถ้วยทีไลท์</span><small>Tealight</small></a></li><li><a href="#p-glass" data-prod="p-glass"><span>เทียนหอมในแก้ว</span><small>Glass jar</small></a></li><li><a href="#p-tin" data-prod="p-tin"><span>เทียนในกระป๋อง</span><small>Tin</small></a></li><li><a href="#p-shape" data-prod="p-shape"><span>เทียนรูปทรงพิเศษ</span><small>Special shape</small></a></li><li><a href="#p-festive" data-prod="p-festive"><span>เทียนแฟนซีประจำเทศกาล</span><small>Seasonal</small></a></li><li class="all"><a href="#formats">ดูสินค้าทั้งหมด →</a></li></ul></li>
+          <li class="has-sub"><a href="#formats" aria-haspopup="true">Product <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a><ul class="sub"><li><a href="product-tealight.html"><span>เทียนถ้วยทีไลท์</span><small>Tealight</small></a></li><li><a href="product-glass.html"><span>เทียนหอมในแก้ว</span><small>Glass jar</small></a></li><li><a href="product-tin.html"><span>เทียนในกระป๋อง</span><small>Tin</small></a></li><li><a href="product-shape.html"><span>เทียนรูปทรงพิเศษ</span><small>Special shape</small></a></li><li><a href="product-festive.html"><span>เทียนแฟนซีประจำเทศกาล</span><small>Seasonal</small></a></li><li class="all"><a href="#formats">ดูสินค้าทั้งหมด →</a></li></ul></li>
           <li><a href="#formats">รูปแบบเทียน</a></li>
           <li><a href="#palm">ไขปาล์ม</a></li>
           <li><a href="#services">บริการ</a></li>
@@ -391,7 +391,7 @@ nav.top a.here{color:var(--ember)}
         <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="เปิดเมนู"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       </div>
       <div class="mobile-menu" id="mobileMenu" hidden>
-        <span class="mhead">Product</span><a class="msub" href="#p-tealight" data-prod="p-tealight">เทียนถ้วยทีไลท์</a><a class="msub" href="#p-glass" data-prod="p-glass">เทียนหอมในแก้ว</a><a class="msub" href="#p-tin" data-prod="p-tin">เทียนในกระป๋อง</a><a class="msub" href="#p-shape" data-prod="p-shape">เทียนรูปทรงพิเศษ</a><a class="msub" href="#p-festive" data-prod="p-festive">เทียนแฟนซีประจำเทศกาล</a><a href="#formats">รูปแบบเทียน</a><a href="#palm">ไขปาล์ม</a><a href="#services">บริการ</a><a href="#clients">ลูกค้า</a><a href="#process">ขั้นตอนสั่งผลิต</a><a href="#contact">ติดต่อเรา</a><a href="#order">เริ่มสั่งผลิต</a>
+        <span class="mhead">Product</span><a class="msub" href="product-tealight.html">เทียนถ้วยทีไลท์</a><a class="msub" href="product-glass.html">เทียนหอมในแก้ว</a><a class="msub" href="product-tin.html">เทียนในกระป๋อง</a><a class="msub" href="product-shape.html">เทียนรูปทรงพิเศษ</a><a class="msub" href="product-festive.html">เทียนแฟนซีประจำเทศกาล</a><a href="#formats">รูปแบบเทียน</a><a href="#palm">ไขปาล์ม</a><a href="#services">บริการ</a><a href="#clients">ลูกค้า</a><a href="#process">ขั้นตอนสั่งผลิต</a><a href="#contact">ติดต่อเรา</a><a href="#order">เริ่มสั่งผลิต</a>
       </div>
     </div>
   </nav>
@@ -416,31 +416,31 @@ nav.top a.here{color:var(--ember)}
         <span class="badge on hot">ขายดี</span>
         <figure><img src="tealight.jpg" alt="เทียนทีไลท์ไขปาล์มในถ้วยอลูมิเนียม" loading="lazy"></figure>
         <span class="cat">Tealight</span>
-        <div class="row"><div><h3>เทียนถ้วยทีไลท์</h3><div class="sub">ขนาดกะทัดรัด เหมาะกับของชำร่วย</div></div><a class="go" href="#order-tealight" aria-label="สั่งผลิตเทียนทีไลท์">→</a></div>
+        <div class="row"><div><h3><a class="plink" href="product-tealight.html">เทียนถ้วยทีไลท์</a></h3><div class="sub">ขนาดกะทัดรัด เหมาะกับของชำร่วย</div></div><a class="go" href="#order-tealight" aria-label="สั่งผลิตเทียนทีไลท์">→</a></div>
       </article>
       <article id="p-glass" class="pcard" data-set="oem">
         <span class="badge on">ทำแบรนด์</span>
         <figure><img src="glass.jpg" alt="เทียนหอมไขปาล์มในแก้วใส" loading="lazy"></figure>
         <span class="cat">Glass jar</span>
-        <div class="row"><div><h3>เทียนหอมในแก้ว</h3><div class="sub">เลือกกลิ่นและแก้วได้ ติดโลโก้แบรนด์</div></div><a class="go" href="#order-glass" aria-label="สั่งผลิตเทียนในแก้ว">→</a></div>
+        <div class="row"><div><h3><a class="plink" href="product-glass.html">เทียนหอมในแก้ว</a></h3><div class="sub">เลือกกลิ่นและแก้วได้ ติดโลโก้แบรนด์</div></div><a class="go" href="#order-glass" aria-label="สั่งผลิตเทียนในแก้ว">→</a></div>
       </article>
       <article id="p-tin" class="pcard" data-set="oem">
         <span class="badge"></span>
         <figure><img src="tin-clean.jpg" alt="เทียนหอมไขปาล์มในกระป๋องมีฝาปิด" loading="lazy"></figure>
         <span class="cat">Tin</span>
-        <div class="row"><div><h3>เทียนในกระป๋อง</h3><div class="sub">พกพาง่าย ทนทาน เหมาะเดินทาง</div></div><a class="go" href="#order-tin" aria-label="สั่งผลิตเทียนในกระป๋อง">→</a></div>
+        <div class="row"><div><h3><a class="plink" href="product-tin.html">เทียนในกระป๋อง</a></h3><div class="sub">พกพาง่าย ทนทาน เหมาะเดินทาง</div></div><a class="go" href="#order-tin" aria-label="สั่งผลิตเทียนในกระป๋อง">→</a></div>
       </article>
       <article id="p-shape" class="pcard" data-set="oem">
         <span class="badge"></span>
         <figure><img src="shape.jpg" alt="เทียนรูปทรงพิเศษแบบลูกบาศก์ฟองกลม" loading="lazy"></figure>
         <span class="cat">Special shape</span>
-        <div class="row"><div><h3>เทียนรูปทรงพิเศษ</h3><div class="sub">ดีไซน์ตามต้องการ เพิ่มเอกลักษณ์</div></div><a class="go" href="#order-shape" aria-label="สั่งผลิตเทียนรูปทรงพิเศษ">→</a></div>
+        <div class="row"><div><h3><a class="plink" href="product-shape.html">เทียนรูปทรงพิเศษ</a></h3><div class="sub">ดีไซน์ตามต้องการ เพิ่มเอกลักษณ์</div></div><a class="go" href="#order-shape" aria-label="สั่งผลิตเทียนรูปทรงพิเศษ">→</a></div>
       </article>
       <article id="p-festive" class="pcard" data-set="oem ws">
         <span class="badge on">ตามเทศกาล</span>
         <figure><img src="festive.jpg" alt="เทียนแฟนซีฮาโลวีน" loading="lazy"></figure>
         <span class="cat">Seasonal</span>
-        <div class="row"><div><h3>เทียนแฟนซีประจำเทศกาล</h3><div class="sub">ฮาโลวีน คริสต์มาส ปีใหม่ วาเลนไทน์</div></div><a class="go" href="#order-festive" aria-label="สั่งผลิตเทียนเทศกาล">→</a></div>
+        <div class="row"><div><h3><a class="plink" href="product-festive.html">เทียนแฟนซีประจำเทศกาล</a></h3><div class="sub">ฮาโลวีน คริสต์มาส ปีใหม่ วาเลนไทน์</div></div><a class="go" href="#order-festive" aria-label="สั่งผลิตเทียนเทศกาล">→</a></div>
       </article>
     </div>
     <div class="rail-foot">
@@ -788,14 +788,6 @@ nav.top a.here{color:var(--ember)}
   document.getElementById('prev').addEventListener('click',function(){step(-1)});
   document.getElementById('next').addEventListener('click',function(){step(1)});
   rail.addEventListener('scroll',sync,{passive:true});window.addEventListener('resize',sync);
-  document.querySelectorAll('a[data-prod]').forEach(function(a){a.addEventListener('click',function(e){
-    var card=document.getElementById(a.dataset.prod); if(!card) return; e.preventDefault();
-    if(card.hidden){var tab=document.getElementById('t-oem'); if(tab) tab.click();}
-    var mm=document.getElementById('mobileMenu'), mb=document.getElementById('menuBtn'); if(mm&&!mm.hidden){mm.hidden=true; if(mb) mb.setAttribute('aria-expanded','false');}
-    document.getElementById('formats').scrollIntoView({behavior:'smooth',block:'start'});
-    setTimeout(function(){var r=document.getElementById('rail'); r.scrollTo({left:card.offsetLeft-r.offsetLeft,behavior:'smooth'}); history.replaceState(null,'','#'+a.dataset.prod); card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash')},1600);},350);
-    if(document.activeElement) document.activeElement.blur();
-  });});
   document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){
     document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x===t?'true':'false')});
     var set=t.dataset.set;rail.querySelectorAll('.pcard').forEach(function(c){c.hidden=c.dataset.set.split(' ').indexOf(set)<0});
