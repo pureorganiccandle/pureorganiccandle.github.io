@@ -99,13 +99,14 @@ nav.top.scrolled{background:rgba(251,246,240,.5);border-bottom-color:rgba(0,0,0,
 .rail{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:4px}
 .rail::-webkit-scrollbar{display:none}
 .pcard{scroll-snap-align:start;background:var(--card);border-radius:18px;padding:16px 18px 18px;display:flex;flex-direction:column;min-width:0}
-.pcard .badge{align-self:flex-start;font-size:12.5px;font-weight:500;border-radius:999px;padding:3px 11px;background:var(--green);color:#fff;visibility:hidden}
+.pcard .badge{align-self:flex-start;font-size:12.5px;font-weight:500;line-height:20px;height:26px;box-sizing:border-box;border-radius:999px;padding:3px 11px;background:var(--green);color:#fff;visibility:hidden}
 .pcard .badge.on{visibility:visible}
 .pcard .badge.hot{background:var(--ember)}
 .pcard figure{margin:10px 0 18px;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#fff}
 .pcard figure img{width:100%;height:100%;object-fit:cover}
 .pcard .cat{font-size:13px;color:var(--muted)}
-.pcard .row{display:flex;justify-content:space-between;align-items:end;gap:10px;margin-top:2px}
+.pcard .row{display:flex;justify-content:space-between;align-items:end;gap:10px;margin-top:2px;flex:1}
+.pcard .row>div{align-self:flex-start}
 .pcard h3{font-family:var(--f-body);font-weight:500;font-size:17px;letter-spacing:0}
 .pcard .sub{font-size:14px;color:var(--muted);margin-top:2px}
 .go{width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;flex:none;text-decoration:none}
@@ -173,8 +174,8 @@ nav.top.scrolled{background:rgba(251,246,240,.5);border-bottom-color:rgba(0,0,0,
 .pstep h3 .en{font-family:var(--f-label);font-weight:600;font-size:26px;color:#fff;line-height:1.2}
 .pstep h3 .th{font-family:var(--f-body);font-weight:400;font-size:15px;color:var(--mint)}
 .pstep .pdesc{margin:14px 0 22px;font-size:15px;line-height:1.7;color:#D5E0D6;max-width:30ch;min-height:5.1em}
-.pcard{list-style:disc;margin:auto 0 0;padding:22px 22px 22px 40px;background:#E3EDE4;color:#24402D;border-radius:24px;text-align:left;font-size:14px;line-height:1.65;width:100%;flex:1}
-.pcard li+li{margin-top:6px}
+ul.pcard{list-style:disc;margin:auto 0 0;padding:22px 22px 22px 40px;background:#E3EDE4;color:#24402D;border-radius:24px;text-align:left;font-size:14px;line-height:1.65;width:100%;flex:1}
+ul.pcard li+li{margin-top:6px}
 @media (max-width:1000px){.psteps{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:48px}}
 @media (max-width:560px){.psteps{grid-template-columns:1fr}.pstep .pdesc{min-height:0}}
 /* ---------- contact ---------- */
