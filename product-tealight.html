@@ -449,6 +449,19 @@ nav.top a.here{color:var(--ember)}
 .trust div{display:flex;align-items:center;gap:10px;font-size:13px;line-height:1.35;color:var(--ink)}
 .trust i{width:34px;height:34px;border-radius:50%;background:var(--mint);color:var(--forest);display:grid;place-items:center;flex:none}
 @media (max-width:860px){.shop{grid-template-columns:1fr}.stage{max-width:320px}.trust{grid-template-columns:1fr}}
+.scents2{border:0;margin:0 0 20px;padding:0;min-width:0}
+.scents2 legend{float:left;width:100%;font-size:14px;color:var(--muted);margin-bottom:10px;padding:0}
+.scents2 .scgrid{clear:both}
+.scents2 legend b{color:var(--ink);font-weight:500;margin-left:4px}
+.scgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.sc{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;border:1px solid var(--line);border-radius:14px;padding:8px 4px 7px;background:#fff;cursor:pointer;font-size:12.5px;text-align:center;line-height:1.2;transition:border-color .15s,background .15s}
+.sc:hover{border-color:#B9BDB0}
+.sc input{position:absolute;opacity:0;pointer-events:none}
+.sc img{width:30px;height:30px;object-fit:contain}
+.sc .nos{width:30px;height:30px;border-radius:50%;border:1.5px dashed #C9CCC0;display:grid;place-items:center;color:var(--muted);font-size:14px}
+.sc:has(input:checked){border-color:var(--forest);background:#F1F6F1;box-shadow:inset 0 0 0 1px var(--forest)}
+.sc:has(input:focus-visible){outline:2px solid var(--ember);outline-offset:2px}
+@media (max-width:560px){.scgrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.sc{font-size:11px;padding:6px 2px}.sc img,.sc .nos{width:24px;height:24px}}
 /* ---- checkout drawer ---- */
 .co{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(23,58,35,0);transition:background .25s;pointer-events:none}
 .co.open{background:rgba(23,58,35,.42);pointer-events:auto}
@@ -555,6 +568,7 @@ nav.top a.here{color:var(--ember)}
             <div><dt>จำนวน</dt><dd>10 ชิ้น / กล่อง</dd></div>
             <div><dt>บรรจุภัณฑ์</dt><dd>กล่องกระดาษคราฟท์</dd></div>
           </dl>
+          <fieldset class="scents2"><legend>เลือกกลิ่น <b id="scName">ไม่มีกลิ่น</b></legend><div class="scgrid"><label class="sc"><input type="radio" name="bscent2" value="ไม่มีกลิ่น (Unscented)" id="sc-none" checked><span class="nos" aria-hidden="true">–</span><span>ไม่มีกลิ่น</span></label><label class="sc"><input type="radio" name="bscent2" value="กุหลาบ (Rose)" id="sc-rose"><img src="scent-rose.png" alt=""><span>กุหลาบ</span></label><label class="sc"><input type="radio" name="bscent2" value="วานิลลา (Vanilla)" id="sc-vanilla"><img src="scent-vanilla.png" alt=""><span>วานิลลา</span></label><label class="sc"><input type="radio" name="bscent2" value="ลาเวนเดอร์ (Lavender)" id="sc-lavender"><img src="scent-lavender.png" alt=""><span>ลาเวนเดอร์</span></label><label class="sc"><input type="radio" name="bscent2" value="ตะไคร้ (Lemongrass)" id="sc-lemongrass"><img src="scent-lemongrass.png" alt=""><span>ตะไคร้</span></label><label class="sc"><input type="radio" name="bscent2" value="ส้ม (Orange)" id="sc-orange"><img src="scent-orange.png" alt=""><span>ส้ม</span></label><label class="sc"><input type="radio" name="bscent2" value="พีช (Peach)" id="sc-peach"><img src="scent-peach.png" alt=""><span>พีช</span></label><label class="sc"><input type="radio" name="bscent2" value="มะลิ (Jasmine)" id="sc-jasmine"><img src="scent-jasmine.png" alt=""><span>มะลิ</span></label><label class="sc"><input type="radio" name="bscent2" value="ลีลาวดี (Frangipani)" id="sc-frangipani"><img src="scent-frangipani.png" alt=""><span>ลีลาวดี</span></label><label class="sc"><input type="radio" name="bscent2" value="ใบเตย (Pandan)" id="sc-pandan"><img src="scent-pandan.png" alt=""><span>ใบเตย</span></label></div></fieldset>
           <div class="buybar">
             <div class="qty" role="group" aria-label="จำนวนกล่อง"><button type="button" id="qMinus" aria-label="ลดจำนวน">−</button><input id="qInput" type="number" inputmode="numeric" min="1" max="999" value="1" aria-label="จำนวนกล่อง"><button type="button" id="qPlus" aria-label="เพิ่มจำนวน">+</button></div>
             <button type="button" class="buy" id="buyBtn"><span>สั่งซื้อ</span><span class="tot" id="buyTot">฿70</span></button>
@@ -615,7 +629,7 @@ nav.top a.here{color:var(--ember)}
     <div class="dots"><span id="st1" class="on"><b>1</b>จัดส่ง</span><i></i><span id="st2"><b>2</b>โอนเงิน</span><i></i><span id="st3"><b>3</b>เสร็จสิ้น</span></div>
     <div class="dbody">
       <div id="sumWrap">
-        <div class="mini"><img src="tealight-box.webp" alt=""><div class="t">เทียนทีไลท์ไขปาล์ม กล่อง 10 ชิ้น<small id="miniQty">× 1 กล่อง</small></div><div class="p" id="miniSub">฿35</div></div>
+        <div class="mini"><img src="tealight-box.webp" alt=""><div class="t">เทียนทีไลท์ไขปาล์ม กล่อง 10 ชิ้น<small id="miniQty">× 1 กล่อง</small><small id="miniScent">กลิ่น: ไม่มีกลิ่น</small></div><div class="p" id="miniSub">฿35</div></div>
         <div class="lines"><div><span>ค่าสินค้า</span><span id="lnSub">35 บาท</span></div><div><span>ค่าส่ง</span><span>35 บาท</span></div><div class="sum"><span>ยอดรวม</span><span id="lnTot">70 บาท</span></div></div>
       </div>
       <div id="step1">
@@ -653,6 +667,9 @@ nav.top a.here{color:var(--ember)}
   var PRICE=35, SHIP=35, SKU='tealight-box10';
   var $=function(id){return document.getElementById(id)};
   var q=$('qInput'), slipData='', step=1, last=null;
+  function scent(){var r=document.querySelector('input[name="bscent2"]:checked');return r?r.value:'ไม่มีกลิ่น (Unscented)'}
+  function scentTh(){return scent().replace(/\s*\(.*\)$/,'')}
+  document.querySelectorAll('input[name="bscent2"]').forEach(function(r){r.addEventListener('change',function(){$('scName').textContent=scentTh();$('miniScent').textContent='กลิ่น: '+scentTh()})});
   function qty(){var n=parseInt(q.value,10);return isFinite(n)?Math.max(1,Math.min(999,n)):1}
   function fmt(n){return n.toLocaleString('th-TH')}
   function upd(){var n=qty(),sub=n*PRICE,tot=sub+SHIP;
@@ -707,7 +724,7 @@ nav.top a.here{color:var(--ember)}
     var btn=$('nextBtn');btn.disabled=true;btn.textContent='กำลังส่ง…';
     var d=new Date(),p=function(n){return String(n).padStart(2,'0')};
     var no='PO-'+String(d.getFullYear()).slice(2)+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds())+Math.random().toString(36).slice(2,4).toUpperCase();
-    var body={type:'shop',no:no,sku:SKU,qty:qty(),name:$('cName').value.trim(),phone:$('cPhone').value.trim(),email:$('cEmail').value.trim(),address:$('cAddr').value.trim(),note:$('cNote').value.trim(),slip:slipData};
+    var body={type:'shop',no:no,sku:SKU,qty:qty(),name:$('cName').value.trim(),phone:$('cPhone').value.trim(),email:$('cEmail').value.trim(),address:$('cAddr').value.trim(),note:('กลิ่น: '+scent()+($('cNote').value.trim()?' | '+$('cNote').value.trim():'')),slip:slipData};
     fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
       .then(function(){$('okNo').textContent=no;show(3)})
       .catch(function(){err('err2','ส่งไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองใหม่ หรือโทร 099-008-7943')})
