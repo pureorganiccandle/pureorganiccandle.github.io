@@ -414,6 +414,120 @@ nav.top a.here{color:var(--ember)}
 .bar .links .sub a[aria-current="page"]{background:#F0E9DD}
 @media (max-width:860px){.ph{grid-template-columns:1fr}}
 </style>
+<style>
+/* ---- shop ---- */
+.shop{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:stretch}
+.stage{position:relative;width:100%;height:100%;min-height:420px;background:radial-gradient(120% 90% at 30% 20%,#FFFFFF 0%,#F4F1EA 60%,#ECE6DA 100%);border-radius:28px;display:grid;place-items:center;overflow:hidden}
+.stage img{position:absolute;inset:9% 10% 6%;width:80%;height:85%;object-fit:contain;mix-blend-mode:multiply}
+.stage .ribbon{position:absolute;top:18px;left:18px;display:flex;gap:6px;z-index:2}
+.stage .ribbon span{font-size:12.5px;font-weight:500;border-radius:999px;padding:4px 12px;background:#fff;color:var(--forest);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.stage .ribbon span.hot{background:var(--ember);color:#fff}
+.sinfo{min-width:0;padding-block:8px}
+.sinfo .eyebrow{color:var(--green)}
+.sinfo h2{font-size:clamp(30px,3.6vw,46px);line-height:1.15;margin:10px 0 12px}
+.sinfo .desc{color:var(--muted);margin:0;max-width:44ch}
+.pricebox{display:flex;align-items:flex-end;gap:14px;margin:24px 0 6px}
+.pricebox .amt{font-family:var(--f-display);font-size:58px;line-height:.9;color:var(--forest)}
+.pricebox .amt small{font-size:26px;vertical-align:top;margin-right:2px}
+.pricebox .per{font-size:14px;color:var(--muted);line-height:1.4;padding-bottom:4px}
+.specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:22px 0;border-top:1px solid var(--line)}
+.specs div{padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.specs div:nth-child(odd){padding-right:16px}
+.specs dt{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.specs dd{margin:2px 0 0;font-weight:400}
+.buybar{display:flex;gap:12px;align-items:stretch}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;background:#fff;flex:none}
+.qty button{width:46px;height:54px;border:0;background:transparent;font-size:20px;line-height:1;cursor:pointer;color:var(--ink);border-radius:999px}
+.qty button:hover{background:var(--card)}
+.qty input{width:44px;border:0;text-align:center;font:inherit;font-size:17px;font-weight:500;background:transparent;color:var(--ink);-moz-appearance:textfield}
+.qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.buy{flex:1;display:inline-flex;align-items:center;justify-content:space-between;gap:12px;border:0;cursor:pointer;background:var(--forest);color:#fff;border-radius:999px;padding:0 10px 0 26px;min-height:54px;font:inherit;font-size:16px;font-weight:500;transition:background .2s}
+.buy:hover{background:#0F2A18}
+.buy .tot{background:rgba(255,255,255,.14);border-radius:999px;padding:7px 14px;font-family:var(--f-label);font-weight:600;letter-spacing:.02em}
+.buynote{font-size:13px;color:var(--muted);margin:10px 4px 0}
+.oem{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;border:1.5px solid var(--forest);border-radius:999px;padding:10px 10px 10px 24px;text-decoration:none;color:var(--forest);background:#fff;transition:background .2s}
+.oem:hover{background:#F1F6F1}
+.oem b{display:block;font-weight:500;font-size:15.5px}
+.oem small{display:block;font-size:12.5px;color:var(--muted)}
+.oem i{width:34px;height:34px;border-radius:50%;background:var(--mint);display:grid;place-items:center;flex:none}
+.trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:22px}
+.trust div{display:flex;align-items:center;gap:10px;font-size:13px;line-height:1.35;color:var(--ink)}
+.trust i{width:34px;height:34px;border-radius:50%;background:var(--mint);color:var(--forest);display:grid;place-items:center;flex:none}
+@media (max-width:860px){.shop{grid-template-columns:1fr}.stage{min-height:0;aspect-ratio:1/1;max-width:420px;justify-self:center}.trust{grid-template-columns:1fr}}
+.scents2{border:0;margin:0 0 20px;padding:0;min-width:0}
+.scents2 .sclab{font-size:14px;color:var(--muted);margin-bottom:10px}
+
+.scents2 .sclab b{color:var(--ink);font-weight:500;margin-left:4px}
+.scgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.sc{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;border:1px solid var(--line);border-radius:14px;padding:8px 4px 7px;background:#fff;cursor:pointer;font-size:12.5px;text-align:center;line-height:1.2;transition:border-color .15s,background .15s}
+.sc:hover{border-color:#B9BDB0}
+.sc input{position:absolute;opacity:0;pointer-events:none}
+.sc img{width:30px;height:30px;object-fit:contain}
+.sc .nos{width:30px;height:30px;border-radius:50%;border:1.5px dashed #C9CCC0;display:grid;place-items:center;color:var(--muted);font-size:14px}
+.sc:has(input:checked){border-color:var(--forest);background:#F1F6F1;box-shadow:inset 0 0 0 1px var(--forest)}
+.sc:has(input:focus-visible){outline:2px solid var(--ember);outline-offset:2px}
+@media (max-width:560px){.scgrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.sc{font-size:11px;padding:6px 2px}.sc img,.sc .nos{width:24px;height:24px}}
+/* ---- checkout drawer ---- */
+.co{position:fixed;inset:0;z-index:60;display:flex;justify-content:flex-end;background:rgba(23,58,35,0);transition:background .25s;pointer-events:none}
+.co.open{background:rgba(23,58,35,.42);pointer-events:auto}
+.co[hidden]{display:none}
+.drawer{width:min(100%,460px);height:100%;background:#FFFDF9;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);box-shadow:-30px 0 60px -30px rgba(0,0,0,.4)}
+.co.open .drawer{transform:none}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 0}
+.dh h3{font-family:var(--f-display);font-size:24px;margin:0}
+.x{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:18px;color:var(--ink)}
+.dots{display:flex;align-items:center;gap:8px;padding:14px 22px 0;font-size:12.5px;color:var(--muted)}
+.dots b{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:500;font-size:11.5px;background:#fff}
+.dots .on b{background:var(--forest);border-color:var(--forest);color:#fff}
+.dots .on{color:var(--forest)}
+.dots i{flex:1;height:1.5px;background:var(--line)}
+.dots span{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.dbody{flex:1;overflow:auto;padding:18px 22px 22px}
+.mini{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px;margin-bottom:18px}
+.mini img{width:64px;height:64px;object-fit:contain;background:#F4F1EA;border-radius:12px;flex:none;mix-blend-mode:multiply}
+.mini .t{flex:1;min-width:0;font-size:14px;line-height:1.4}
+.mini .t small{display:block;color:var(--muted)}
+.mini .p{font-family:var(--f-label);font-weight:600;font-size:17px;color:var(--forest);white-space:nowrap}
+.lines{font-size:14px;margin:-6px 0 18px;padding:0 4px}
+.lines div{display:flex;justify-content:space-between;padding:3px 0;color:var(--muted)}
+.lines .sum{color:var(--ink);font-weight:500;font-size:16px;border-top:1px dashed var(--line);margin-top:6px;padding-top:8px}
+.fld{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fld label{font-size:13px;color:var(--muted)}
+.fld input,.fld textarea{font:inherit;font-size:15px;border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#fff;color:var(--ink);transition:border-color .15s}
+.fld input:focus,.fld textarea:focus{border-color:var(--green);outline:none}
+.fld textarea{resize:vertical;min-height:88px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bankcard{position:relative;border-radius:22px;padding:20px 20px 18px;color:#fff;background:linear-gradient(135deg,#1F4A2C 0%,#173A23 55%,#0F2A18 100%);overflow:hidden;margin-bottom:14px}
+.bankcard::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:rgba(200,228,202,.12)}
+.bankcard .b1{display:flex;align-items:center;gap:10px;font-size:14px;opacity:.9}
+.bankcard .b1 i{width:30px;height:30px;border-radius:9px;background:#fff;color:#4E2A84;font-style:normal;font-family:var(--f-label);font-weight:600;font-size:11px;display:grid;place-items:center}
+.bankcard .acc{font-family:var(--f-label);font-size:28px;font-weight:600;letter-spacing:.06em;margin:16px 0 2px}
+.bankcard .nm{font-size:14px;opacity:.8}
+.bankcard .cp{position:relative;z-index:1;margin-top:12px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;cursor:pointer}
+.due{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-bottom:14px}
+.due span{font-size:14px;color:var(--muted)}
+.due b{font-family:var(--f-label);font-size:26px;font-weight:600;color:var(--ember)}
+.due .cp2{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;cursor:pointer;margin-left:8px;vertical-align:middle;color:var(--ink)}
+.drop{display:flex;flex-direction:column;align-items:center;gap:8px;border:1.5px dashed #C9CCC0;border-radius:18px;padding:20px;text-align:center;cursor:pointer;background:#fff;transition:border-color .15s,background .15s}
+.drop:hover{border-color:var(--green);background:#FAFCF9}
+.drop .ic{width:44px;height:44px;border-radius:50%;background:var(--card);display:grid;place-items:center;color:var(--forest)}
+.drop b{font-weight:500;font-size:15px}
+.drop small{font-size:12.5px;color:var(--muted)}
+.drop img{max-height:200px;max-width:100%;object-fit:contain;border-radius:10px}
+.hint{font-size:12.5px;color:var(--muted);margin:10px 2px 0}
+.err{color:#B3261E;font-size:13.5px;margin:10px 2px 0}
+.dfoot{padding:14px 22px calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:#FFFDF9;display:flex;gap:10px}
+.dfoot .btn2{border:1px solid var(--line);background:#fff;border-radius:999px;padding:0 20px;min-height:52px;font:inherit;font-size:15px;cursor:pointer;color:var(--ink)}
+.dfoot .go2{flex:1;border:0;border-radius:999px;min-height:52px;background:var(--forest);color:#fff;font:inherit;font-size:16px;font-weight:500;cursor:pointer}
+.dfoot .go2:disabled{opacity:.6;cursor:progress}
+.done{text-align:center;padding:30px 6px}
+.done .ck{width:76px;height:76px;border-radius:50%;background:var(--mint);color:var(--forest);display:grid;place-items:center;margin:0 auto 16px}
+.done h4{font-family:var(--f-display);font-weight:400;font-size:28px;margin:0 0 8px}
+.done p{color:var(--muted);margin:6px auto;max-width:34ch}
+.done .no{display:inline-block;margin:10px 0;font-family:var(--f-label);font-weight:600;font-size:18px;letter-spacing:.04em;background:var(--card);border-radius:12px;padding:8px 16px;color:var(--forest)}
+@media (max-width:560px){.co{align-items:flex-end}.drawer{width:100%;height:92dvh;border-radius:24px 24px 0 0;transform:translateY(100%)}.row2{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.drawer,.co{transition:none}}
+</style>
 </head>
 <body>
 <nav class="top" aria-label="เมนูหลัก">
@@ -441,20 +555,40 @@ nav.top a.here{color:var(--ember)}
 <main>
   <div class="wrap">
     <nav class="crumb" aria-label="breadcrumb"><a href="index.html">หน้าแรก</a> / <a href="index.html#formats">Product</a> / <span>ไขปาล์มสำหรับทำเทียน</span></nav>
-    <section class="ph" aria-labelledby="ph-h">
-      <figure><img src="palmwax-bulk.jpg" alt="ไขปาล์มสีขาวนวลแบบก้อนในถุงบรรจุ"></figure>
-      <div>
-        <span class="eyebrow">Palm wax</span>
-        <h1 id="ph-h">ไขปาล์มสำหรับทำเทียน</h1>
-        <p class="lead">ไขปาล์มเกรดอาหาร (Food grade) แบบก้อน ชนิดเดียวกับที่โรงงานใช้เทเทียนเอง เหมาะสำหรับร้านและแบรนด์ที่ผลิตเทียนเอง ผู้เริ่มต้นทำเทียนหอม และงานเวิร์กช็อป</p>
-        <ul class="chips"><li class="hl">กิโลกรัมละ 130 บาท</li><li class="hl">ฟู้ดเกรด (Food grade)</li><li>ไขจากพืช</li><li>ใช้ในโรงงานมาตั้งแต่ พ.ศ. 2540</li></ul>
-        <div class="ctas">
-          <a class="pill" href="mailto:pureorganic.sales01@gmail.com?subject=%E0%B8%AA%E0%B8%AD%E0%B8%9A%E0%B8%96%E0%B8%B2%E0%B8%A1%E0%B9%84%E0%B8%82%E0%B8%9B%E0%B8%B2%E0%B8%A5%E0%B9%8C%E0%B8%A1%E0%B8%AA%E0%B8%B3%E0%B8%AB%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B8%97%E0%B8%B3%E0%B9%80%E0%B8%97%E0%B8%B5%E0%B8%A2%E0%B8%99">สอบถาม / สั่งซื้อไขปาล์ม <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg></span></a>
-          <a class="ghost2" href="tel:0990087943">โทร 099-008-7943</a>
+    
+    <section class="psec" aria-labelledby="shop-h" id="buy" style="border-top:0;padding-top:24px">
+      <div class="shop">
+        <div class="stage">
+          <div class="ribbon"><span class="hot">พร้อมส่ง</span><span>Food grade</span></div>
+          <img src="palmwax-bulk.jpg" alt="ไขปาล์มสีขาวนวลแบบก้อนในถุงบรรจุ" width="900" height="900">
+        </div>
+        <div class="sinfo">
+          <span class="eyebrow">Ready to ship · Palm wax</span>
+          <h2 id="shop-h">ไขปาล์มสำหรับทำเทียน<br>ฟู้ดเกรด (Food grade)</h2>
+          <p class="desc">ไขปาล์มเกรดอาหาร (Food grade) แบบก้อน ชนิดเดียวกับที่โรงงานใช้เทเทียนเอง เหมาะสำหรับร้านและแบรนด์ที่ผลิตเทียนเอง ผู้เริ่มต้นทำเทียนหอม และงานเวิร์กช็อป</p>
+          <div class="pricebox"><span class="amt"><small>฿</small>130</span><span class="per">ต่อกิโลกรัม (ขั้นต่ำ 1 กก.)<br>ค่าส่ง 35 บาท ต่อออเดอร์</span></div>
+          <dl class="specs">
+            <div><dt>วัตถุดิบ</dt><dd>ไขปาล์ม</dd></div>
+            <div><dt>เกรด</dt><dd>ฟู้ดเกรด (Food grade)</dd></div>
+            <div><dt>ลักษณะ</dt><dd>แบบก้อน</dd></div>
+            <div><dt>หน่วยขาย</dt><dd>กิโลกรัม</dd></div>
+          </dl>
+          
+          <div class="buybar">
+            <div class="qty" role="group" aria-label="จำนวนกิโลกรัม"><button type="button" id="qMinus" aria-label="ลดจำนวน">−</button><input id="qInput" type="number" inputmode="numeric" min="1" max="999" value="1" aria-label="จำนวนกิโลกรัม"><button type="button" id="qPlus" aria-label="เพิ่มจำนวน">+</button></div>
+            <button type="button" class="buy" id="buyBtn"><span>สั่งซื้อ</span><span class="tot" id="buyTot">฿165</span></button>
+          </div>
+          <p class="buynote" id="sumLine">1 กก. 130 บาท + ค่าส่ง 35 บาท</p>
+          <a class="oem" href="index.html#order"><span><b>สั่งผลิต OEM</b><small>ให้โรงงานผลิตเทียนในแบรนด์ของคุณ · ขั้นต่ำ 10 ชิ้นต่อแบบ</small></span><i aria-hidden="true"></i></a>
+          <div class="trust">
+            <div><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg></i>จัดส่งทั่วประเทศ</div>
+            <div><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-5 9 5M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></i>โอนผ่านธนาคาร แนบสลิปออนไลน์</div>
+            <div><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2 3 4 4.5 4 7.5a4 4 0 0 1-8 0C8 7.5 10 6 12 3z"/><path d="M9 21h6"/></svg></i>โรงงานผลิตเอง ตั้งแต่ปี 2540</div>
+          </div>
         </div>
       </div>
     </section>
-    <section class="psec" aria-labelledby="op-h"><h2 id="op-h">รายละเอียดสินค้า</h2><div class="ogrid"><div class="ocard"><b>ราคา 130 บาท / กก.</b><span>ราคาต่อกิโลกรัม ค่าจัดส่งสอบถามฝ่ายขาย</span></div><div class="ocard"><b>ฟู้ดเกรด (Food grade)</b><span>ไขปาล์มเกรดอาหาร มาจากผลปาล์มซึ่งปลูกทดแทนได้</span></div><div class="ocard"><b>เนื้อแข็ง คงรูปได้ดี</b><span>รองรับน้ำหอมสำหรับเทียนหอม และเกิดลวดลายผลึกบนผิวเทียนได้</span></div><div class="ocard"><b>ใช้ได้หลายรูปแบบ</b><span>เทียนแท่ง ทีไลท์ และเทียนในแก้ว</span></div></div><p class="note">จำนวนสั่งซื้อและการจัดส่ง สอบถามฝ่ายขายได้ที่ 099-008-7943 หรือ pureorganic.sales01@gmail.com</p></section>
+    <section class="psec" aria-labelledby="op-h"><h2 id="op-h">รายละเอียดสินค้า</h2><div class="ogrid"><div class="ocard"><b>ราคา 130 บาท / กก.</b><span>ขั้นต่ำ 1 กก. ค่าส่ง 35 บาทต่อออเดอร์</span></div><div class="ocard"><b>ฟู้ดเกรด (Food grade)</b><span>ไขปาล์มเกรดอาหาร มาจากผลปาล์มซึ่งปลูกทดแทนได้</span></div><div class="ocard"><b>เนื้อแข็ง คงรูปได้ดี</b><span>รองรับน้ำหอมสำหรับเทียนหอม และเกิดลวดลายผลึกบนผิวเทียนได้</span></div><div class="ocard"><b>ใช้ได้หลายรูปแบบ</b><span>เทียนแท่ง ทีไลท์ และเทียนในแก้ว</span></div></div><p class="note">สั่งจำนวนมาก สอบถามฝ่ายขายได้ที่ 099-008-7943 หรือ pureorganic.sales01@gmail.com</p></section>
     <section class="psec" aria-labelledby="us-h"><h2 id="us-h">เหมาะสำหรับ</h2><ul class="uses"><li>ร้านและแบรนด์ที่ผลิตเทียนเอง</li><li>ผู้เริ่มต้นทำเทียนหอมโฮมเมด</li><li>เวิร์กช็อปและคลาสสอนทำเทียน</li></ul></section>
     <section class="psec" aria-labelledby="oem-h"><h2 id="oem-h">อยากให้โรงงานผลิตให้แทน?</h2><p class="note" style="margin-top:0;font-size:15.5px">เรารับผลิตเทียนหอมไขปาล์มในชื่อแบรนด์ของคุณ (OEM) ขั้นต่ำ 10 ชิ้นต่อแบบ เรื่องกลิ่นและภาชนะ ลูกค้าสามารถจัดเตรียมมาเอง หรือเลือกใช้บริการจัดหาโดยทางโรงงาน <a href="index.html#order" style="color:var(--green)">เริ่มสั่งผลิต →</a></p></section>
     <section class="psec" aria-labelledby="ot-h" style="padding-bottom:72px"><h2 id="ot-h">สินค้าอื่น ๆ</h2><div class="others"><a class="oth" href="product-shape.html"><img src="shape.jpg" alt="เทียนรูปทรงพิเศษแบบลูกบาศก์ฟองกลม" loading="lazy"><small>Special shape</small><b>เทียนรูปทรงพิเศษ</b></a><a class="oth" href="product-tealight.html"><img src="tealight.jpg" alt="เทียนทีไลท์ไขปาล์มในถ้วยอลูมิเนียม" loading="lazy"><small>Tealight</small><b>เทียนถ้วยทีไลท์</b></a><a class="oth" href="product-glass.html"><img src="glass.jpg" alt="เทียนหอมไขปาล์มในแก้วใส" loading="lazy"><small>Glass jar</small><b>เทียนหอมในแก้ว</b></a><a class="oth" href="product-tin.html"><img src="tin-clean.jpg" alt="เทียนหอมไขปาล์มในกระป๋องมีฝาปิด" loading="lazy"><small>Tin</small><b>เทียนในกระป๋อง</b></a><a class="oth" href="product-festive.html"><img src="festive.jpg" alt="เทียนแฟนซีฮาโลวีน" loading="lazy"><small>Seasonal</small><b>เทียนแฟนซีประจำเทศกาล</b></a></div></section>
@@ -493,6 +627,112 @@ nav.top a.here{color:var(--ember)}
   var nv=document.querySelector('nav.top');function ns(){nv.classList.toggle('scrolled',window.scrollY>40)}window.addEventListener('scroll',ns,{passive:true});ns();
   var mb=document.getElementById('menuBtn'),mm=document.getElementById('mobileMenu');
   mb.addEventListener('click',function(){var o=mm.hidden;mm.hidden=!o;mb.setAttribute('aria-expanded',o?'true':'false')});
+})();
+</script>
+<div class="co" id="co" hidden>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="co-h">
+    <div class="dh"><h3 id="co-h">ชำระเงิน</h3><button type="button" class="x" data-close aria-label="ปิด">✕</button></div>
+    <div class="dots"><span id="st1" class="on"><b>1</b>จัดส่ง</span><i></i><span id="st2"><b>2</b>โอนเงิน</span><i></i><span id="st3"><b>3</b>เสร็จสิ้น</span></div>
+    <div class="dbody">
+      <div id="sumWrap">
+        <div class="mini"><img src="palmwax-bulk.jpg" alt=""><div class="t">ไขปาล์มสำหรับทำเทียน Food grade<small id="miniQty">× 1 กก.</small></div><div class="p" id="miniSub">฿130</div></div>
+        <div class="lines"><div><span>ค่าสินค้า</span><span id="lnSub">130 บาท</span></div><div><span>ค่าส่ง</span><span>35 บาท</span></div><div class="sum"><span>ยอดรวม</span><span id="lnTot">165 บาท</span></div></div>
+      </div>
+      <div id="step1">
+        <div class="fld"><label for="cName">ชื่อ-นามสกุล ผู้รับ *</label><input id="cName" autocomplete="name"></div>
+        <div class="row2">
+          <div class="fld"><label for="cPhone">เบอร์โทร *</label><input id="cPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="08x-xxx-xxxx"></div>
+          <div class="fld"><label for="cEmail">อีเมล (ไม่บังคับ)</label><input id="cEmail" type="email" autocomplete="email"></div>
+        </div>
+        <div class="fld"><label for="cAddr">ที่อยู่จัดส่ง *</label><textarea id="cAddr" autocomplete="street-address" placeholder="บ้านเลขที่ ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์"></textarea></div>
+        <div class="fld"><label for="cNote">หมายเหตุ (ไม่บังคับ)</label><input id="cNote"></div>
+        <p class="err" id="err1" hidden></p>
+      </div>
+      <div id="step2" hidden>
+        <div class="bankcard">
+          <div class="b1"><i>SCB</i>ธนาคารไทยพาณิชย์</div>
+          <div class="acc">122-2-38169-4</div>
+          <div class="nm">ศักดิ์กานต์ ขอดเตชะ</div>
+          <button type="button" class="cp" id="cpAcc">คัดลอกเลขบัญชี</button>
+        </div>
+        <div class="due"><span>ยอดที่ต้องโอน</span><div><b id="payAmt">165</b> <span>บาท</span><button type="button" class="cp2" id="cpAmt">คัดลอก</button></div></div>
+        <label class="drop" for="slipIn" id="slipBox"><span class="ic" id="slipIc"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg></span><b id="slipTxt">แนบสลิปการโอน</b><small id="slipSub">แตะเพื่อเลือกรูปจากเครื่อง</small><img id="slipPrev" alt="ตัวอย่างสลิป" hidden><input id="slipIn" type="file" accept="image/*" hidden></label>
+        <p class="hint">ทางร้านจะตรวจยอดเงินเข้าบัญชีก่อนจัดส่ง</p>
+        <p class="err" id="err2" hidden></p>
+      </div>
+      <div id="step3" hidden>
+        <div class="done"><div class="ck"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h4>ขอบคุณที่สั่งซื้อ</h4><p>เลขที่ออเดอร์ของคุณ</p><div class="no" id="okNo">—</div><p>ทางร้านจะตรวจสอบยอดโอน แล้วจัดส่งตามที่อยู่ที่แจ้งไว้ สอบถามโทร 099-008-7943</p></div>
+      </div>
+    </div>
+    <div class="dfoot" id="dfoot"><button type="button" class="btn2" id="backBtn" hidden>ย้อนกลับ</button><button type="button" class="go2" id="nextBtn">ไปโอนเงิน</button></div>
+  </aside>
+</div>
+<script>
+(function(){
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbyPlHXI672eyUXkPJJX38LHb4zoCz5kITzQABwvG9W9CzWkb29Jqy7gqaKSCbbga_xu8A/exec';
+  var PRICE=130, SHIP=35, SKU='palmwax-1kg';
+  var $=function(id){return document.getElementById(id)};
+  var q=$('qInput'), slipData='', step=1, last=null;
+  function qty(){var n=parseInt(q.value,10);return isFinite(n)?Math.max(1,Math.min(999,n)):1}
+  function fmt(n){return n.toLocaleString('th-TH')}
+  function upd(){var n=qty(),sub=n*PRICE,tot=sub+SHIP;
+    $('buyTot').textContent='฿'+fmt(tot);
+    $('sumLine').textContent=n+' กก. '+fmt(sub)+' บาท + ค่าส่ง '+SHIP+' บาท';
+    $('miniQty').textContent='× '+n+' กก.';$('miniSub').textContent='฿'+fmt(sub);
+    $('lnSub').textContent=fmt(sub)+' บาท';$('lnTot').textContent=fmt(tot)+' บาท';$('payAmt').textContent=fmt(tot);
+    return tot}
+  $('qMinus').onclick=function(){q.value=Math.max(1,qty()-1);upd()};
+  $('qPlus').onclick=function(){q.value=Math.min(999,qty()+1);upd()};
+  q.addEventListener('input',upd);q.addEventListener('blur',function(){q.value=qty();upd()});
+  upd();
+  var co=$('co');
+  function err(id,m){var e=$(id);e.textContent=m;e.hidden=!m}
+  function show(s){step=s;[1,2,3].forEach(function(i){$('step'+i).hidden=i!==s;$('st'+i).classList.toggle('on',i<=s)});
+    $('sumWrap').hidden=s===3;$('backBtn').hidden=s!==2;
+    $('nextBtn').textContent=s===1?'ไปโอนเงิน':s===2?'แจ้งชำระเงิน':'ปิด';
+    $('co-h').textContent=s===3?'สั่งซื้อสำเร็จ':'ชำระเงิน';
+    var b=co.querySelector('.dbody');if(b)b.scrollTop=0}
+  function open(){last=document.activeElement;upd();show(1);co.hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(function(){co.classList.add('open')});setTimeout(function(){$('cName').focus()},250)}
+  function close(){co.classList.remove('open');document.body.style.overflow='';setTimeout(function(){co.hidden=true;if(step===3)reset()},280);if(last)last.focus()}
+  function reset(){slipData='';$('slipPrev').hidden=true;$('slipIc').hidden=false;$('slipTxt').textContent='แนบสลิปการโอน';$('slipSub').textContent='แตะเพื่อเลือกรูปจากเครื่อง';$('slipIn').value=''}
+  $('buyBtn').onclick=open;
+  co.addEventListener('click',function(e){if(e.target===co||e.target.closest('[data-close]'))close()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!co.hidden)close()});
+  $('backBtn').onclick=function(){show(1)};
+  $('nextBtn').onclick=function(){
+    if(step===1){
+      var nm=$('cName').value.trim(),ph=$('cPhone').value.replace(/\D/g,''),ad=$('cAddr').value.trim();
+      if(!nm){err('err1','กรุณากรอกชื่อผู้รับ');return $('cName').focus()}
+      if(ph.length<9){err('err1','กรุณากรอกเบอร์โทรให้ถูกต้อง');return $('cPhone').focus()}
+      if(ad.length<15){err('err1','กรุณากรอกที่อยู่จัดส่งให้ครบ');return $('cAddr').focus()}
+      err('err1','');upd();return show(2);
+    }
+    if(step===2) return send();
+    close();
+  };
+  function copy(t,btn){var o=btn.textContent;var done=function(){btn.textContent='คัดลอกแล้ว';setTimeout(function(){btn.textContent=o},1500)};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done,function(){});}
+  $('cpAcc').onclick=function(){copy('1222381694',this)};
+  $('cpAmt').onclick=function(){copy(String(qty()*PRICE+SHIP),this)};
+  $('slipIn').addEventListener('change',function(){
+    var f=this.files&&this.files[0];if(!f)return;
+    var img=new Image(),url=URL.createObjectURL(f);
+    img.onload=function(){var max=1600,s=Math.min(1,max/Math.max(img.width,img.height));var c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      var d=c.toDataURL('image/jpeg',0.82);slipData=d.split(',')[1];$('slipPrev').src=d;$('slipPrev').hidden=false;$('slipIc').hidden=true;$('slipTxt').textContent='แนบสลิปแล้ว';$('slipSub').textContent='แตะเพื่อเปลี่ยนรูป';URL.revokeObjectURL(url);err('err2','')};
+    img.onerror=function(){err('err2','เปิดรูปนี้ไม่ได้ ลองเลือกรูปสลิปอีกครั้ง')};
+    img.src=url;
+  });
+  function send(){
+    if(!slipData)return err('err2','กรุณาแนบสลิปการโอนก่อนกดแจ้งชำระเงิน');
+    var btn=$('nextBtn');btn.disabled=true;btn.textContent='กำลังส่ง…';
+    var d=new Date(),p=function(n){return String(n).padStart(2,'0')};
+    var no='PO-'+String(d.getFullYear()).slice(2)+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds())+Math.random().toString(36).slice(2,4).toUpperCase();
+    var body={type:'shop',no:no,sku:SKU,qty:qty(),name:$('cName').value.trim(),phone:$('cPhone').value.trim(),email:$('cEmail').value.trim(),address:$('cAddr').value.trim(),note:$('cNote').value.trim(),slip:slipData};
+    fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
+      .then(function(){$('okNo').textContent=no;show(3)})
+      .catch(function(){err('err2','ส่งไม่สำเร็จ ตรวจอินเทอร์เน็ตแล้วลองใหม่ หรือโทร 099-008-7943')})
+      .finally(function(){btn.disabled=false;if(step===2)btn.textContent='แจ้งชำระเงิน'});
+  }
 })();
 </script>
 </body>
