@@ -251,7 +251,7 @@ tr.detail td { padding: 0 10px 12px 48px; }
         <button class="iconbtn" id="searchbtn" aria-label="ค้นหาออเดอร์"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg></button>
         <button class="iconbtn" id="bell" aria-label="ดูออเดอร์ที่ยังไม่เสร็จ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span class="dot" id="belldot" hidden></span></button>
         <button class="iconbtn" id="fsbtn" aria-label="เต็มจอ" title="เต็มจอ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
-        <div class="who"><span class="av">PO</span><span>ฝ่ายขาย</span></div>
+        <button class="who" id="logout" title="ออกจากระบบ" style="border:0"><span class="av">PO</span><span>ฝ่ายขาย · ออก</span></button>
       </div>
 
       <div id="view-overview" style="display:contents">
@@ -475,8 +475,9 @@ tr.detail td { padding: 0 10px 12px 48px; }
 <div class="login" id="login" hidden>
   <form id="login-f">
     <h2>Pure Organic Dashboard</h2>
-    <p>ใส่รหัสผ่านเพื่อดูออเดอร์ ยอดเข้าชม และทำใบเสนอราคา</p>
+    <p>ใส่ชื่อผู้ใช้และรหัสผ่านเพื่อดูออเดอร์ ยอดเข้าชม และทำใบเสนอราคา</p>
     <input type="url" id="login-api" placeholder="ลิงก์ Apps Script (…/exec)" hidden aria-label="ลิงก์ Apps Script">
+    <input type="text" id="login-user" placeholder="ชื่อผู้ใช้" autocomplete="username" autocapitalize="off" aria-label="ชื่อผู้ใช้" required>
     <input type="password" id="login-pw" placeholder="รหัสผ่าน" autocomplete="current-password" aria-label="รหัสผ่าน" required>
     <label class="rm"><input type="checkbox" id="login-rm" checked> จำไว้ในเครื่องนี้</label>
     <div class="e" id="login-e"></div>
@@ -505,7 +506,7 @@ function toast(t) { const el = $('toast'); el.textContent = t; el.hidden = false
 
 function errText(e) {
   const c = e && e.code;
-  if (c === 'auth') return 'รหัสผ่านไม่ถูกต้อง';
+  if (c === 'auth') return 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
   if (c === 'network') return 'เชื่อมต่อไม่ได้ ตรวจอินเทอร์เน็ตแล้วกดโหลดใหม่';
   if (c === 'forbidden') return 'ระบบไม่อนุญาตให้แก้ช่องนี้';
   if (c === 'needs_reauth') return 'การเชื่อมต่อ Google Sheets หมดอายุ เชื่อมต่อใหม่ได้ที่ claude.ai → Settings → Connectors';
@@ -1194,10 +1195,10 @@ setInterval(() => { if (!S.loadedAt) return; const s = Math.round((Date.now() - 
 // ---------- เชื่อมต่อ Google Sheet ผ่าน Apps Script ----------
 const API_URL = '__API_URL__';
 const LS = { get: (k) => { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }, set: (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} } };
-const AUTH = { api: (API_URL.startsWith('https://') ? API_URL : LS.get('po_api')), pass: LS.get('po_pass') || (function () { try { return sessionStorage.getItem('po_pass') || ''; } catch (e) { return ''; } })() };
+const AUTH = { api: (API_URL.startsWith('https://') ? API_URL : LS.get('po_api')), user: LS.get('po_user'), pass: LS.get('po_pass') || (function () { try { return sessionStorage.getItem('po_pass') || ''; } catch (e) { return ''; } })() };
 async function api(body) {
   let r;
-  try { r = await fetch(AUTH.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ ...body, pass: AUTH.pass }) }); }
+  try { r = await fetch(AUTH.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ ...body, user: AUTH.user, pass: AUTH.pass }) }); }
   catch (e) { const x = new Error('network'); x.code = 'network'; throw x; }
   let d; try { d = await r.json(); } catch (e) { const x = new Error('ตอบกลับไม่ใช่ข้อมูล ตรวจว่า Deploy เป็น Web app และตั้ง Who has access = Anyone'); x.code = 'tool_error'; throw x; }
   if (!d.ok) { const x = new Error(d.error || 'ทำไม่สำเร็จ'); x.code = d.code || 'tool_error'; if (x.code === 'auth') showLogin(x.message); throw x; }
@@ -1216,17 +1217,18 @@ const fileSaver = { async save({ filename, data }) { const u = URL.createObjectU
 function showLogin(msg) {
   $('login').hidden = false; $('login-e').textContent = msg || '';
   $('login-api').hidden = !!API_URL.startsWith('https://'); $('login-api').required = !API_URL.startsWith('https://'); $('login-api').value = AUTH.api || '';
-  $('login-pw').value = ''; setTimeout(() => $('login-pw').focus(), 50);
+  $('login-user').value = AUTH.user || ''; $('login-pw').value = ''; setTimeout(() => (AUTH.user ? $('login-pw') : $('login-user')).focus(), 50);
 }
+$('logout').addEventListener('click', () => { LS.set('po_pass', ''); try { sessionStorage.removeItem('po_pass'); } catch (e) {} AUTH.pass = ''; S.mcp = null; showLogin('ออกจากระบบแล้ว'); });
 $('login-f').addEventListener('submit', async (ev) => {
   ev.preventDefault();
   if (!API_URL.startsWith('https://')) AUTH.api = $('login-api').value.trim();
-  AUTH.pass = $('login-pw').value;
+  AUTH.user = $('login-user').value.trim(); AUTH.pass = $('login-pw').value;
   $('login-b').disabled = true; $('login-e').textContent = '';
   try {
     await api({ action: 'ping' });
     const rm = $('login-rm').checked;
-    LS.set('po_pass', rm ? AUTH.pass : ''); if (!API_URL.startsWith('https://')) LS.set('po_api', rm ? AUTH.api : '');
+    LS.set('po_user', AUTH.user); LS.set('po_pass', rm ? AUTH.pass : ''); if (!API_URL.startsWith('https://')) LS.set('po_api', rm ? AUTH.api : '');
     try { sessionStorage.setItem('po_pass', AUTH.pass); } catch (e) {}
     $('login').hidden = true; S.mcp = sheetApi; await refresh();
   } catch (e) { $('login-e').textContent = errText(e); }
@@ -1234,7 +1236,7 @@ $('login-f').addEventListener('submit', async (ev) => {
 });
 async function startApp() {
   Q.downloads = fileSaver;
-  if (!AUTH.api || !AUTH.pass) { showLogin(''); return; }
+  if (!AUTH.api || !AUTH.user || !AUTH.pass) { showLogin(''); return; }
   try { await api({ action: 'ping' }); } catch (e) { if (e.code !== 'auth') showLogin(errText(e)); return; }
   S.mcp = sheetApi; await refresh();
 }
