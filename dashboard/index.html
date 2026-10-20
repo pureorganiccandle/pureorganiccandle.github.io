@@ -391,6 +391,10 @@ tr.detail td { padding: 0 10px 12px 48px; }
           <div class="bcard"><h3>อุปกรณ์</h3><div id="vb-dev"></div></div>
           <div class="bcard"><h3>ภาษาเบราว์เซอร์</h3><div id="vb-lang"></div></div>
         </div>
+        <section class="vtbl" style="margin-bottom:22px">
+          <div class="sec-h"><h2>ผู้เข้าชมแต่ละคน</h2><span class="count" id="p-count"></span></div>
+          <div class="tblwrap"><table><thead><tr><th>ผู้เข้าชม</th><th>จำนวนครั้ง</th><th>เข้ากี่วัน</th><th>ครั้งแรก</th><th>ล่าสุด</th><th>มาจาก</th><th>อุปกรณ์</th><th>สนใจสั่งผลิต</th></tr></thead><tbody id="p-rows"></tbody></table></div>
+        </section>
         <section class="vtbl">
           <div class="sec-h"><h2>การเข้าชมล่าสุด</h2><span class="count" id="v-count"></span></div>
           <div class="tblwrap"><table><thead><tr><th>วันเวลา</th><th>หน้า</th><th>มาจาก</th><th>อุปกรณ์</th><th>ภาษา</th><th>ผู้เข้าชม</th></tr></thead><tbody id="v-rows"></tbody></table></div>
@@ -1149,6 +1153,26 @@ function renderOrdersView(os) {
   const open = os.filter(o => o.status !== DONE);
   bars('ob-why', tally(open, o => lastReason(o.admin_note) || 'ยังไม่ได้ระบุสาเหตุ'), open.length);
 }
+function renderPeople(vs) {
+  const tb = $('p-rows'); tb.textContent = '';
+  const m = new Map();
+  vs.forEach(v => { const k = v.visitor || '?'; if (!m.has(k)) m.set(k, []); m.get(k).push(v); });
+  const ppl = [...m.entries()].map(([id, arr]) => {
+    arr.sort((a, b) => (a.at ? a.at.getTime() : 0) - (b.at ? b.at.getTime() : 0));
+    const first = arr[0], last = arr[arr.length - 1];
+    const devs = [...new Set(arr.map(x => x.device).filter(Boolean))].join(', ');
+    const orderPages = arr.filter(x => x.page.includes('#order'));
+    return { id, n: arr.length, days: new Set(arr.map(x => x.day)).size, first, last, src: srcOf(first), devs, order: orderPages.length ? [...new Set(orderPages.map(x => pageOf(x.page).replace('ฟอร์มสั่งผลิต · ', '')))].join(', ') : '' };
+  }).sort((a, b) => b.n - a.n || (b.last.at ? b.last.at.getTime() : 0) - (a.last.at ? a.last.at.getTime() : 0));
+  const back = ppl.filter(x => x.days > 1).length;
+  $('p-count').textContent = ppl.length ? nf.format(ppl.length) + ' คน · กลับมามากกว่า 1 วัน ' + nf.format(back) + ' คน' : '';
+  ppl.slice(0, 100).forEach(x => {
+    const tr = document.createElement('tr');
+    const cells = ['ผู้เข้าชม #' + x.id.slice(-6), nf.format(x.n) + ' ครั้ง', nf.format(x.days) + ' วัน', thDateTime(x.first.at), thDateTime(x.last.at), x.src, x.devs, x.order || '—'];
+    cells.forEach((t, i) => { const c = document.createElement('td'); c.textContent = t || '—'; if (i === 0) c.style.fontWeight = '600'; if (i === 1 && x.n > 1) c.style.color = 'var(--mint-ink)'; if (i === 7 && x.order) c.style.color = 'var(--butter-ink)'; tr.appendChild(c); });
+    tb.appendChild(tr);
+  });
+}
 function renderVisitsView(vs) {
   if (Q.view !== 'visits') return;
   const people = new Set(vs.map(v => v.visitor)).size;
@@ -1164,6 +1188,7 @@ function renderVisitsView(vs) {
   bars('vb-lang', tally(vs, v => langOf(v.lang)), vs.length);
   const tb = $('v-rows'); tb.textContent = ''; const m = $('v-msg');
   if (S.verr) { m.hidden = false; m.className = 'qmsg err'; m.textContent = S.verr; $('v-count').textContent = ''; return; }
+  renderPeople(vs);
   const list = vs.slice().sort((a, b) => (b.at ? b.at.getTime() : 0) - (a.at ? a.at.getTime() : 0));
   $('v-count').textContent = list.length ? 'แสดง ' + nf.format(Math.min(list.length, 100)) + ' จาก ' + nf.format(list.length) + ' ครั้ง' : '';
   if (!list.length) { m.hidden = false; m.className = 'qmsg'; m.textContent = 'ยังไม่มีคนเข้าเว็บในช่วงนี้'; return; }
