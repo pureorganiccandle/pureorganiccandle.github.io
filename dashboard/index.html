@@ -506,7 +506,6 @@ tr.detail td { padding: 0 10px 12px 48px; }
       <form id="login-f">
         <h2>เข้าสู่ระบบ</h2>
         <p class="sub">Dashboard ฝ่ายขาย</p>
-        <input type="url" id="login-api" placeholder="ลิงก์ Apps Script (…/exec)" hidden aria-label="ลิงก์ Apps Script">
         <input type="text" id="login-user" placeholder="ชื่อผู้ใช้" autocomplete="username" autocapitalize="off" aria-label="ชื่อผู้ใช้" required>
         <div class="lg-pw"><input type="password" id="login-pw" placeholder="รหัสผ่าน" autocomplete="current-password" aria-label="รหัสผ่าน" required>
           <button type="button" class="lg-eye" id="login-eye" aria-label="แสดงรหัสผ่าน"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
@@ -1271,14 +1270,12 @@ const sheetApi = {
 const fileSaver = { async save({ filename, data }) { const u = URL.createObjectURL(data); const a = document.createElement('a'); a.href = u; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); } };
 function showLogin(msg) {
   $('login').hidden = false; $('login-e').textContent = msg || '';
-  $('login-api').hidden = !!API_URL.startsWith('https://'); $('login-api').required = !API_URL.startsWith('https://'); $('login-api').value = AUTH.api || '';
   $('login-user').value = AUTH.user || ''; $('login-pw').value = ''; setTimeout(() => (AUTH.user ? $('login-pw') : $('login-user')).focus(), 50);
 }
 $('login-eye').addEventListener('click', () => { const i = $('login-pw'); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; $('login-eye').setAttribute('aria-label', show ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน'); });
 $('logout').addEventListener('click', () => { LS.set('po_pass', ''); try { sessionStorage.removeItem('po_pass'); } catch (e) {} AUTH.pass = ''; S.mcp = null; showLogin('ออกจากระบบแล้ว'); });
 $('login-f').addEventListener('submit', async (ev) => {
   ev.preventDefault();
-  if (!API_URL.startsWith('https://')) AUTH.api = $('login-api').value.trim();
   AUTH.user = $('login-user').value.trim(); AUTH.pass = $('login-pw').value;
   $('login-b').disabled = true; $('login-e').textContent = '';
   try {
