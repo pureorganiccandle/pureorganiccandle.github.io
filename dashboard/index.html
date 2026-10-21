@@ -876,7 +876,7 @@ function quoteDocHTML(q) {
   const sum = (l, v) => `<tr><td style="padding:6px 0;font-size:12.5px;color:${MUT}">${l}</td><td style="padding:6px 0;text-align:right;font-family:${MONO};font-size:13px;font-weight:600;color:${INK}">${v}</td></tr>`;
   const cust = [q.company ? `<div style="color:${INK}">${esc(q.company)}</div>` : '', q.name ? `<div>คุณ${esc(q.name)}</div>` : '', q.addr ? `<div>${esc(q.addr).replace(/\n/g, '<br>')}</div>` : '', q.taxid ? `<div>เลขประจำตัวผู้เสียภาษี ${esc(q.taxid)}</div>` : '', q.phone ? `<div>${esc(q.phone)}</div>` : '', q.email ? `<div>${esc(q.email)}</div>` : ''].join('');
   const terms = [q.lead ? 'ระยะเวลาผลิต: ' + q.lead : '', q.pay ? 'การชำระเงิน: ' + q.pay : '', q.depPct ? `มัดจำ ${q.depPct}% = ${money(q.dep)} บาท` : ''].filter(Boolean).concat(String(q.notes || '').split('\n').map(s => s.trim()).filter(Boolean));
-  return `<div style="font-family:'Prompt','Sarabun','Noto Sans Thai',Tahoma,sans-serif;background:${BG};color:${MUT};padding:56px 60px 44px;font-size:13px;line-height:1.6;max-width:760px;margin:0 auto">
+  return `<div style="font-family:'Prompt','Sarabun','Noto Sans Thai',Tahoma,sans-serif;background:${BG};color:${MUT};padding:56px 60px 44px;font-size:13px;line-height:1.6;max-width:210mm;min-height:297mm;box-sizing:border-box;display:flex;flex-direction:column;margin:0 auto"><div>
 <img src="https://pureorganiccandle.github.io/logo-green.png" alt="Pure Organic" width="270" style="width:270px;height:auto;display:block">
 <div style="margin-top:16px;color:${MUT};font-weight:600"><span style="font-size:14px">ใบเสนอราคา</span> <span style="font-size:11px;letter-spacing:.3em;margin-left:6px">QUOTATION</span></div>
 <table style="width:100%;border-collapse:collapse;margin-top:34px"><tr>
@@ -896,11 +896,11 @@ ${sum('รวมเป็นเงิน', money(q.sub))}${q.discN ? sum('ส่
 ${q.total ? `<tr><td colspan="2" style="text-align:right;font-size:11.5px;color:${MUT};padding-top:2px">(${bahtText(q.total)})</td></tr>` : ''}
 </table></td></tr></table>
 ${terms.length ? `<div style="margin-top:30px;max-width:460px"><div style="font-size:12.5px;font-weight:600;color:${INK};letter-spacing:.06em;margin-bottom:6px">เงื่อนไขและหมายเหตุ</div>${terms.map(s => `<div style="font-size:12.5px;line-height:1.75">${esc(s)}</div>`).join('')}</div>` : ''}
-<div style="font-family:'Playfair Display','Noto Serif Thai',Georgia,serif;font-size:46px;color:${INK};margin-top:30px;line-height:1.1">thank you</div>
+</div><div style="margin-top:auto;padding-top:30px"><div style="font-family:'Playfair Display','Noto Serif Thai',Georgia,serif;font-size:46px;color:${INK};line-height:1.1">thank you</div>
 <table style="width:100%;border-collapse:collapse;margin-top:34px"><tr>
 <td style="vertical-align:bottom;font-size:12px;line-height:1.7"><img src="https://pureorganiccandle.github.io/logo-green.png" alt="Pure Organic" width="120" style="width:120px;height:auto;display:block;margin-bottom:8px">${CO.addr}<br>ฝ่ายขาย · ทุกวัน 08:00–18:30 น.</td>
 <td style="vertical-align:bottom;text-align:right;font-size:12px;line-height:1.7">${CO.web}<br>${CO.email}<br>โทร ${CO.tel}</td>
-</tr></table>
+</tr></table></div>
 </div>`;
 }
 
@@ -1104,7 +1104,7 @@ function previewQuote(x) {
   QL.pv = x; $('pv-ov').hidden = false; $('pv-close').focus();
 }
 function quoteFileHTML(q, autoPrint) {
-  return '<!doctype html><html lang="th"><head><meta charset="utf-8"><title>ใบเสนอราคา ' + esc(q.no) + '</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400&display=swap"><style>@page{size:A4;margin:0}body{margin:0;background:#F2EEE6;-webkit-print-color-adjust:exact;print-color-adjust:exact}@media print{.noprint{display:none}}</style></head><body>' + quoteDocHTML(q) +
+  return '<!doctype html><html lang="th"><head><meta charset="utf-8"><title>ใบเสนอราคา ' + esc(q.no) + '</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400&display=swap"><style>@page{size:A4;margin:0}html{background:#F2EEE6}body{margin:0;background:#F2EEE6;-webkit-print-color-adjust:exact;print-color-adjust:exact}@media print{.noprint{display:none}}</style></head><body>' + quoteDocHTML(q) +
     '<p class="noprint" style="text-align:center;font:12px sans-serif;color:#999">กด Ctrl/Cmd+P เพื่อพิมพ์ หรือเลือก "บันทึกเป็น PDF"</p>' +
     (autoPrint ? '<script>window.addEventListener("load",function(){setTimeout(function(){window.print()},600)})<\/script>' : '') + '</body></html>';
 }
