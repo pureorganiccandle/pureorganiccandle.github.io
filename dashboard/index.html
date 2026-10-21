@@ -1248,7 +1248,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && S.
 setInterval(() => { if (!S.loadedAt) return; const s = Math.round((Date.now() - S.loadedAt.getTime()) / 1000); $('stamp').textContent = '● สด · อัปเดต ' + (s < 5 ? 'เมื่อสักครู่' : s < 60 ? s + ' วินาทีที่แล้ว' : Math.floor(s / 60) + ' นาทีที่แล้ว'); }, 1000);
 
 // ---------- เชื่อมต่อ Google Sheet ผ่าน Apps Script ----------
-const API_URL = '__API_URL__';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzXY6EhS0V6g11nKK8x5hW93CuoW9vYOBjhWEPXT7C3pwHcFO4OFo645jIYBNNbmWA/exec';
 const LS = { get: (k) => { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }, set: (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} } };
 const AUTH = { api: (API_URL.startsWith('https://') ? API_URL : LS.get('po_api')), user: LS.get('po_user'), pass: LS.get('po_pass') || (function () { try { return sessionStorage.getItem('po_pass') || ''; } catch (e) { return ''; } })() };
 async function api(body) {
