@@ -3,7 +3,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#1C1C1E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400&display=swap">
 <style>
 /* Layout: dark rounded device frame with an icon rail, white main panel; row 1 = visits chart card + 3 pastel order cards, row 2 = order list + dark action card */
 :root {
@@ -149,7 +149,7 @@ tr.detail td { padding: 0 10px 12px 48px; }
 .qbtn.primary { background: var(--dark); border-color: var(--dark); color: var(--dark-ink); }
 .qbtn:disabled { opacity: .5; cursor: progress; }
 .paperwrap { background: var(--sky); border-radius: var(--r-lg); padding: 16px; position: sticky; top: 12px; overflow-x: auto; }
-.paper { background: #fff; color: #1a1a1a; border-radius: 6px; box-shadow: 0 8px 24px -12px rgb(20 40 80 / .35); min-width: 480px; }
+.paper { background: #F2EEE6; color: #1a1a1a; border-radius: 6px; box-shadow: 0 8px 24px -12px rgb(20 40 80 / .35); min-width: 480px; }
 .qlist table { min-width: 560px; }
 .qlist td .lk { border: 0; background: transparent; color: var(--sky-ink); text-decoration: underline; padding: 0; font-size: .8rem; }
 .qmsg { font-size: .8rem; color: var(--muted); padding: 12px 2px; }
@@ -862,24 +862,45 @@ function quoteData() {
 }
 
 function quoteDocHTML(q) {
-  const row = (i, n) => `<tr><td style="padding:8px 6px;border-bottom:1px solid #eee;text-align:center;color:#888">${n}</td><td style="padding:8px 6px;border-bottom:1px solid #eee">${esc(i.desc).replace(/\n/g, '<br>')}</td><td style="padding:8px 6px;border-bottom:1px solid #eee;text-align:right">${i.qty.toLocaleString('th-TH')} ${esc(i.unit)}</td><td style="padding:8px 6px;border-bottom:1px solid #eee;text-align:right">${money(i.price)}</td><td style="padding:8px 6px;border-bottom:1px solid #eee;text-align:right">${money(i.total)}</td></tr>`;
-  const sumRow = (l, val, strong) => `<tr><td style="padding:4px 6px;color:${strong ? '#111' : '#555'};${strong ? 'font-weight:700' : ''}">${l}</td><td style="padding:4px 6px;text-align:right;${strong ? 'font-weight:700;font-size:15px' : ''}">${val}</td></tr>`;
-  const cust = [q.company, q.name && q.company ? 'คุณ' + q.name : (q.name ? 'คุณ' + q.name : ''), q.addr, q.taxid ? 'เลขประจำตัวผู้เสียภาษี ' + q.taxid : '', [q.phone, q.email].filter(Boolean).join(' · ')].filter(Boolean).map(x => esc(x).replace(/\n/g, '<br>')).join('<br>');
-  const terms = [q.validTo ? 'ยืนราคาถึง ' + thLong(q.validTo) : '', q.lead ? 'ระยะเวลาผลิต: ' + q.lead : '', q.pay ? 'การชำระเงิน: ' + q.pay : '', q.depPct ? `มัดจำ ${q.depPct}% = ${money(q.dep)} บาท` : ''].filter(Boolean);
-  const notes = String(q.notes || '').split('\n').map(s => s.trim()).filter(Boolean);
-  return `<div style="font-family:'Prompt','Sarabun','Noto Sans Thai',Tahoma,sans-serif;color:#1a1a1a;padding:36px 36px 28px;font-size:13px;line-height:1.55;max-width:760px;margin:0 auto;background:#fff">
-<table style="width:100%;border-collapse:collapse"><tr>
-<td style="vertical-align:top"><div style="font-size:20px;font-weight:700;color:#1F4A2C">${CO.name}</div><div style="color:#555;font-size:12px;margin-top:4px">${CO.addr}<br>โทร ${CO.tel} · ${CO.email}<br>${CO.web}</div></td>
-<td style="vertical-align:top;text-align:right"><div style="font-size:22px;font-weight:700;letter-spacing:.02em">ใบเสนอราคา</div><div style="color:#888;font-size:11px;letter-spacing:.08em">QUOTATION</div><div style="margin-top:8px;font-size:12px">เลขที่ <b>${esc(q.no)}</b><br>วันที่ ${esc(thLong(q.date))}</div></td>
+  const INK = '#3E352C', MUT = '#8A8074', LINE = '#CFC7BB', BG = '#F2EEE6';
+  const MONO = "'DM Mono','Roboto Mono',ui-monospace,Menlo,Consolas,monospace";
+  const td = 'padding:14px 0;border-bottom:1px solid ' + LINE + ';vertical-align:top;';
+  const row = (i) => {
+    const lines = String(i.desc || '').split('\n'); const head = lines.shift();
+    const sub = lines.filter(Boolean).map(esc).join('<br>');
+    return `<tr><td style="${td}padding-right:12px"><div style="font-size:13.5px;color:${INK}">${esc(head)}</div>${sub ? `<div style="font-size:11.5px;color:${MUT};margin-top:3px;line-height:1.5">${sub}</div>` : ''}</td>` +
+      `<td style="${td}text-align:right;font-family:${MONO};font-size:13px;color:${INK};white-space:nowrap">${i.qty.toLocaleString('th-TH')}${i.unit ? ' <span style="color:' + MUT + ';font-size:11px">' + esc(i.unit) + '</span>' : ''}</td>` +
+      `<td style="${td}text-align:right;font-family:${MONO};font-size:13px;color:${INK};white-space:nowrap">${money(i.price)}</td>` +
+      `<td style="${td}text-align:right;font-family:${MONO};font-size:13px;color:${INK};white-space:nowrap">${money(i.total)}</td></tr>`;
+  };
+  const sum = (l, v) => `<tr><td style="padding:6px 0;font-size:12.5px;color:${MUT}">${l}</td><td style="padding:6px 0;text-align:right;font-family:${MONO};font-size:13px;font-weight:600;color:${INK}">${v}</td></tr>`;
+  const cust = [q.company ? `<div style="color:${INK}">${esc(q.company)}</div>` : '', q.name ? `<div>คุณ${esc(q.name)}</div>` : '', q.addr ? `<div>${esc(q.addr).replace(/\n/g, '<br>')}</div>` : '', q.taxid ? `<div>เลขประจำตัวผู้เสียภาษี ${esc(q.taxid)}</div>` : '', q.phone ? `<div>${esc(q.phone)}</div>` : '', q.email ? `<div>${esc(q.email)}</div>` : ''].join('');
+  const terms = [q.lead ? 'ระยะเวลาผลิต: ' + q.lead : '', q.pay ? 'การชำระเงิน: ' + q.pay : '', q.depPct ? `มัดจำ ${q.depPct}% = ${money(q.dep)} บาท` : ''].filter(Boolean).concat(String(q.notes || '').split('\n').map(s => s.trim()).filter(Boolean));
+  return `<div style="font-family:'Prompt','Sarabun','Noto Sans Thai',Tahoma,sans-serif;background:${BG};color:${MUT};padding:56px 60px 44px;font-size:13px;line-height:1.6;max-width:760px;margin:0 auto">
+<div style="font-size:54px;font-weight:700;line-height:1;color:${INK};letter-spacing:-.01em">ใบเสนอราคา</div>
+<div style="font-size:12px;letter-spacing:.32em;color:${MUT};margin-top:10px;font-weight:600">QUOTATION</div>
+<table style="width:100%;border-collapse:collapse;margin-top:34px"><tr>
+<td style="vertical-align:top;width:58%;font-size:13px;line-height:1.75"><div style="font-weight:600;color:${INK};font-size:12.5px;margin-bottom:4px">เสนอราคาแก่:</div>${cust || '<span style="color:#B5AC9F">— ยังไม่ระบุลูกค้า —</span>'}</td>
+<td style="vertical-align:top;text-align:right;font-size:13px;line-height:1.75"><div>เลขที่ ${esc(q.no)}</div><div style="font-weight:600;color:${INK}">${esc(thLong(q.date))}</div>${q.validTo ? `<div>ยืนราคาถึง:</div><div style="font-weight:600;color:${INK}">${esc(thLong(q.validTo))}</div>` : ''}</td>
 </tr></table>
-<div style="margin:22px 0 16px;padding:12px 14px;background:#F4F7F3;border-radius:8px"><div style="font-size:11px;color:#888;margin-bottom:2px">เสนอราคาแก่</div>${cust || '<span style="color:#aaa">— ยังไม่ระบุลูกค้า —</span>'}</div>
-<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:#1F4A2C;color:#fff"><th style="padding:8px 6px;width:34px;font-weight:500">#</th><th style="padding:8px 6px;text-align:left;font-weight:500">รายการ</th><th style="padding:8px 6px;text-align:right;font-weight:500;width:90px">จำนวน</th><th style="padding:8px 6px;text-align:right;font-weight:500;width:100px">ราคา/หน่วย</th><th style="padding:8px 6px;text-align:right;font-weight:500;width:110px">จำนวนเงิน</th></tr></thead>
-<tbody>${q.items.length ? q.items.map((i, n) => row(i, n + 1)).join('') : '<tr><td colspan="5" style="padding:16px;text-align:center;color:#aaa">— ยังไม่มีรายการ —</td></tr>'}</tbody></table>
-<table style="width:100%;border-collapse:collapse;margin-top:10px"><tr><td style="vertical-align:top;padding-right:16px;color:#555;font-size:12px">${q.total ? '(' + bahtText(q.total) + ')' : ''}</td><td style="width:260px;vertical-align:top"><table style="width:100%;border-collapse:collapse;font-size:13px">
-${sumRow('รวมเป็นเงิน', money(q.sub))}${q.discN ? sumRow('ส่วนลด', '-' + money(q.discN)) : ''}${q.shipN ? sumRow('ค่าจัดส่ง', money(q.shipN)) : ''}${q.vatOn ? sumRow('ยอดก่อนภาษี', money(q.base)) + sumRow('ภาษีมูลค่าเพิ่ม 7%', money(q.vat)) : ''}<tr><td colspan="2" style="border-top:1.5px solid #1F4A2C;padding:0"></td></tr>${sumRow('ยอดรวมทั้งสิ้น (บาท)', money(q.total), true)}
+<table style="width:100%;border-collapse:collapse;margin-top:34px"><thead><tr>
+<th style="text-align:left;font-size:12px;font-weight:600;color:${INK};padding:0 0 12px;border-bottom:1px solid ${MUT}">รายการ</th>
+<th style="text-align:right;font-size:12px;font-weight:600;color:${INK};padding:0 0 12px;border-bottom:1px solid ${MUT};width:90px">จำนวน</th>
+<th style="text-align:right;font-size:12px;font-weight:600;color:${INK};padding:0 0 12px;border-bottom:1px solid ${MUT};width:110px">ราคา/หน่วย</th>
+<th style="text-align:right;font-size:12px;font-weight:600;color:${INK};padding:0 0 12px;border-bottom:1px solid ${MUT};width:120px">จำนวนเงิน</th>
+</tr></thead><tbody>${q.items.length ? q.items.map(row).join('') : `<tr><td colspan="4" style="padding:22px 0;text-align:center;color:#B5AC9F;border-bottom:1px solid ${LINE}">— ยังไม่มีรายการ —</td></tr>`}</tbody></table>
+<table style="width:100%;border-collapse:collapse;margin-top:22px"><tr><td></td><td style="width:290px"><table style="width:100%;border-collapse:collapse">
+${sum('รวมเป็นเงิน', money(q.sub))}${q.discN ? sum('ส่วนลด', '-' + money(q.discN)) : ''}${q.shipN ? sum('ค่าจัดส่ง', money(q.shipN)) : ''}${q.vatOn ? sum('ภาษีมูลค่าเพิ่ม (7%)', money(q.vat)) : ''}
+<tr><td colspan="2" style="padding:0"><div style="border-top:1px solid ${MUT};margin:8px 0 6px"></div></td></tr>
+<tr><td style="padding:6px 0;font-size:13px;font-weight:600;color:${INK};letter-spacing:.04em">ยอดรวมทั้งสิ้น:</td><td style="padding:6px 0;text-align:right;font-family:${MONO};font-size:21px;font-weight:600;color:${INK};white-space:nowrap">฿${money(q.total)}</td></tr>
+${q.total ? `<tr><td colspan="2" style="text-align:right;font-size:11.5px;color:${MUT};padding-top:2px">(${bahtText(q.total)})</td></tr>` : ''}
 </table></td></tr></table>
-${terms.length || notes.length ? `<div style="margin-top:20px;font-size:12px;color:#444"><div style="font-weight:600;color:#1a1a1a;margin-bottom:4px">เงื่อนไขและหมายเหตุ</div><ul style="margin:0;padding-left:18px">${terms.concat(notes).map(s => '<li>' + esc(s) + '</li>').join('')}</ul></div>` : ''}
-<table style="width:100%;border-collapse:collapse;margin-top:44px;font-size:12px;color:#555"><tr><td style="width:50%;text-align:center;vertical-align:bottom"><div style="border-top:1px solid #bbb;width:70%;margin:0 auto;padding-top:6px">ผู้อนุมัติสั่งซื้อ / วันที่</div></td><td style="width:50%;text-align:center;vertical-align:bottom"><div style="border-top:1px solid #bbb;width:70%;margin:0 auto;padding-top:6px">ฝ่ายขาย Pure Organic</div></td></tr></table>
+${terms.length ? `<div style="margin-top:30px;max-width:460px"><div style="font-size:12.5px;font-weight:600;color:${INK};letter-spacing:.06em;margin-bottom:6px">เงื่อนไขและหมายเหตุ</div>${terms.map(s => `<div style="font-size:12.5px;line-height:1.75">${esc(s)}</div>`).join('')}</div>` : ''}
+<div style="font-family:'Playfair Display','Noto Serif Thai',Georgia,serif;font-size:46px;color:${INK};margin-top:30px;line-height:1.1">thank you</div>
+<table style="width:100%;border-collapse:collapse;margin-top:34px"><tr>
+<td style="vertical-align:bottom;font-size:12px;line-height:1.7"><div style="font-size:20px;font-weight:600;color:${INK};margin-bottom:6px;letter-spacing:-.01em">${CO.name}</div>${CO.addr}<br>ฝ่ายขาย · ทุกวัน 08:00–18:30 น.</td>
+<td style="vertical-align:bottom;text-align:right;font-size:12px;line-height:1.7">${CO.web}<br>${CO.email}<br>โทร ${CO.tel}</td>
+</tr></table>
 </div>`;
 }
 
@@ -1083,7 +1104,7 @@ function previewQuote(x) {
   QL.pv = x; $('pv-ov').hidden = false; $('pv-close').focus();
 }
 function quoteFileHTML(q, autoPrint) {
-  return '<!doctype html><html lang="th"><head><meta charset="utf-8"><title>ใบเสนอราคา ' + esc(q.no) + '</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap"><style>@page{size:A4;margin:12mm}body{margin:0;background:#fff}@media print{.noprint{display:none}}</style></head><body>' + quoteDocHTML(q) +
+  return '<!doctype html><html lang="th"><head><meta charset="utf-8"><title>ใบเสนอราคา ' + esc(q.no) + '</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400&display=swap"><style>@page{size:A4;margin:0}body{margin:0;background:#F2EEE6;-webkit-print-color-adjust:exact;print-color-adjust:exact}@media print{.noprint{display:none}}</style></head><body>' + quoteDocHTML(q) +
     '<p class="noprint" style="text-align:center;font:12px sans-serif;color:#999">กด Ctrl/Cmd+P เพื่อพิมพ์ หรือเลือก "บันทึกเป็น PDF"</p>' +
     (autoPrint ? '<script>window.addEventListener("load",function(){setTimeout(function(){window.print()},600)})<\/script>' : '') + '</body></html>';
 }
