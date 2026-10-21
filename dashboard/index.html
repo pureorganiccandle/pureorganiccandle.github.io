@@ -877,10 +877,8 @@ function quoteDocHTML(q) {
   const cust = [q.company ? `<div style="color:${INK}">${esc(q.company)}</div>` : '', q.name ? `<div>คุณ${esc(q.name)}</div>` : '', q.addr ? `<div>${esc(q.addr).replace(/\n/g, '<br>')}</div>` : '', q.taxid ? `<div>เลขประจำตัวผู้เสียภาษี ${esc(q.taxid)}</div>` : '', q.phone ? `<div>${esc(q.phone)}</div>` : '', q.email ? `<div>${esc(q.email)}</div>` : ''].join('');
   const terms = [q.lead ? 'ระยะเวลาผลิต: ' + q.lead : '', q.pay ? 'การชำระเงิน: ' + q.pay : '', q.depPct ? `มัดจำ ${q.depPct}% = ${money(q.dep)} บาท` : ''].filter(Boolean).concat(String(q.notes || '').split('\n').map(s => s.trim()).filter(Boolean));
   return `<div style="font-family:'Prompt','Sarabun','Noto Sans Thai',Tahoma,sans-serif;background:${BG};color:${MUT};padding:56px 60px 44px;font-size:13px;line-height:1.6;max-width:760px;margin:0 auto">
-<table style="width:100%;border-collapse:collapse"><tr><td style="vertical-align:top">
-<div style="font-size:54px;font-weight:700;line-height:1;color:${INK};letter-spacing:-.01em">ใบเสนอราคา</div>
-<div style="font-size:12px;letter-spacing:.32em;color:${MUT};margin-top:10px;font-weight:600">QUOTATION</div></td>
-<td style="vertical-align:top;text-align:right"><img src="https://pureorganiccandle.github.io/logo-green.png" alt="Pure Organic" width="170" style="width:170px;height:auto;display:inline-block"></td></tr></table>
+<img src="https://pureorganiccandle.github.io/logo-green.png" alt="Pure Organic" width="270" style="width:270px;height:auto;display:block">
+<div style="margin-top:16px;color:${MUT};font-weight:600"><span style="font-size:14px">ใบเสนอราคา</span> <span style="font-size:11px;letter-spacing:.3em;margin-left:6px">QUOTATION</span></div>
 <table style="width:100%;border-collapse:collapse;margin-top:34px"><tr>
 <td style="vertical-align:top;width:58%;font-size:13px;line-height:1.75"><div style="font-weight:600;color:${INK};font-size:12.5px;margin-bottom:4px">เสนอราคาแก่:</div>${cust || '<span style="color:#B5AC9F">— ยังไม่ระบุลูกค้า —</span>'}</td>
 <td style="vertical-align:top;text-align:right;font-size:13px;line-height:1.75"><div>เลขที่ ${esc(q.no)}</div><div style="font-weight:600;color:${INK}">${esc(thLong(q.date))}</div>${q.validTo ? `<div>ยืนราคาถึง:</div><div style="font-weight:600;color:${INK}">${esc(thLong(q.validTo))}</div>` : ''}</td>
