@@ -974,7 +974,7 @@ function openSavedQuote(x) {
   $('q-vat').checked = !!d.vatOn; Q.orderRow = d.orderRow || ''; $('q-from-order').value = Q.orderRow;
   Q.items = (d.items && d.items.length ? d.items : [blankItem()]).map(i => ({ desc: i.desc || '', qty: i.qty === 0 ? '' : String(i.qty ?? ''), unit: i.unit || '', price: i.price === 0 ? '' : String(i.price ?? '') }));
   Q.savedNo = x.no; Q.dirty = false;
-  renderItems(); renderPaper(); window.scrollTo({ top: 0, behavior: 'smooth' }); toast('เปิดใบ ' + x.no + ' แล้ว · ถ้าแก้แล้วบันทึก จะได้เลขที่ใหม่');
+  renderItems(); renderPaper(); window.scrollTo({ top: 0, behavior: 'smooth' }); toast('เปิดใบ ' + x.no + ' แล้ว · แก้แล้วกด "บันทึก" จะอัปเดตใบเดิม (ถ้าจะทำใบใหม่ กด "ใบใหม่")');
 }
 
 function quoteRow(q, status) {
@@ -988,6 +988,18 @@ async function saveQuote() {
   if (!quoteData().items.length) { toast('เพิ่มรายการอย่างน้อย 1 รายการ'); return ''; }
   await loadQuotes();
   if (Q.qerr) { toast(Q.qerr); return ''; }
+  const ex = Q.savedNo ? Q.quotes.find(x => x.no === Q.savedNo) : null;
+  if (ex) {
+    // แก้ใบที่บันทึกแล้ว → เขียนทับแถวเดิม เลขที่เดิม สถานะเดิม
+    $('q-no').value = ex.no;
+    const q = quoteData();
+    await S.mcp.callTool(SERVER, 'update_values', { spreadsheetId: SHEET, range: "'ใบเสนอราคา'!A" + ex.row + ':O' + ex.row, values: [quoteRow(q, ex.status || 'ร่าง')] }, { cache: false });
+    Q.dirty = false; Q.lastSaveWasUpdate = true;
+    renderPaper();
+    await loadQuotes();
+    return ex.no;
+  }
+  Q.lastSaveWasUpdate = false;
   const no = nextQuoteNo();
   $('q-no').value = no;
   const q = quoteData();
@@ -1004,7 +1016,7 @@ async function setQuoteStatus(no, status) {
   await loadQuotes();
 }
 const withBusy = async (btn, fn) => { btn.disabled = true; try { await fn(); } catch (e) { toast(e && (e.code === 'server_unavailable' || e.code === 'upstream_error') ? 'ไม่แน่ใจว่าบันทึกสำเร็จ ดูรายการด้านล่างก่อนกดซ้ำ' : errText(e)); } finally { btn.disabled = false; } };
-$('q-save').addEventListener('click', () => withBusy($('q-save'), async () => { const no = await saveQuote(); if (no) toast('บันทึกใบเสนอราคาเลขที่ ' + no + ' แล้ว'); }));
+$('q-save').addEventListener('click', () => withBusy($('q-save'), async () => { const no = await saveQuote(); if (no) toast((Q.lastSaveWasUpdate ? 'อัปเดตใบเสนอราคาเลขที่ ' : 'บันทึกใบเสนอราคาเลขที่ ') + no + ' แล้ว'); }));
 
 function quoteText(q) {
   const lines = [`ใบเสนอราคา ${q.no} (${thLong(q.date)})`, `เรียน ${[q.name ? 'คุณ' + q.name : '', q.company].filter(Boolean).join(' / ') || 'ลูกค้า'}`, ''];
