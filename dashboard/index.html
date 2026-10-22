@@ -855,10 +855,10 @@ function quoteData() {
   const base = Math.max(0, sub - disc + ship);
   const vat = $('q-vat').checked ? Math.round(base * 7) / 100 : 0;
   const total = base + vat;
-  const depPct = num(v.dep); const dep = depPct ? Math.round(total * depPct) / 100 : 0;
+  const depPct = num(v.dep); const depAmt = depPct ? Math.round(total * depPct) / 100 : 0;
   let validTo = '';
   if (v.date && num(v.valid)) { const [y, m, d] = v.date.split('-').map(Number); validTo = key(new Date(y, m - 1, d + num(v.valid))); }
-  return { ...v, vatOn: $('q-vat').checked, orderRow: Q.orderRow, items, sub, discN: disc, shipN: ship, base, vat, total, depPct, dep, validTo };
+  return { ...v, vatOn: $('q-vat').checked, orderRow: Q.orderRow, items, sub, discN: disc, shipN: ship, base, vat, total, depPct, depAmt, validTo };
 }
 
 function quoteDocHTML(q) {
@@ -875,7 +875,7 @@ function quoteDocHTML(q) {
   };
   const sum = (l, v) => `<tr><td style="padding:6px 0;font-size:12.5px;color:${MUT}">${l}</td><td style="padding:6px 0;text-align:right;font-family:${MONO};font-size:13px;font-weight:600;color:${INK}">${v}</td></tr>`;
   const cust = [q.company ? `<div style="color:${INK}">${esc(q.company)}</div>` : '', q.name ? `<div>คุณ${esc(q.name)}</div>` : '', q.addr ? `<div>${esc(q.addr).replace(/\n/g, '<br>')}</div>` : '', q.taxid ? `<div>เลขประจำตัวผู้เสียภาษี ${esc(q.taxid)}</div>` : '', q.phone ? `<div>${esc(q.phone)}</div>` : '', q.email ? `<div>${esc(q.email)}</div>` : ''].join('');
-  const terms = [q.lead ? 'ระยะเวลาผลิต: ' + q.lead : '', q.pay ? 'การชำระเงิน: ' + q.pay : '', q.depPct ? `มัดจำ ${q.depPct}% = ${money(q.dep)} บาท` : ''].filter(Boolean).concat(String(q.notes || '').split('\n').map(s => s.trim()).filter(Boolean));
+  const terms = [q.lead ? 'ระยะเวลาผลิต: ' + q.lead : '', q.pay ? 'การชำระเงิน: ' + q.pay : '', q.depPct ? `มัดจำ ${q.depPct}% = ${money(q.depAmt)} บาท` : ''].filter(Boolean).concat(String(q.notes || '').split('\n').map(s => s.trim()).filter(Boolean));
   return `<div style="font-family:'Prompt','Sarabun','Noto Sans Thai',Tahoma,sans-serif;background:${BG};color:${MUT};padding:44px 56px 34px;font-size:13px;line-height:1.6;max-width:210mm;min-height:297mm;box-sizing:border-box;display:flex;flex-direction:column;margin:0 auto"><div>
 <img src="https://pureorganiccandle.github.io/logo-green.png" alt="Pure Organic" width="240" style="width:240px;height:auto;display:block">
 <div style="margin-top:10px;color:${MUT};font-weight:600"><span style="font-size:14px">ใบเสนอราคา</span> <span style="font-size:11px;letter-spacing:.3em;margin-left:6px">QUOTATION</span></div>
@@ -967,6 +967,7 @@ function renderQuoteList() {}
 function openSavedQuote(x) {
   let d = null; try { d = JSON.parse(x.json); } catch (e) {}
   if (!d) { toast('อ่านข้อมูลใบนี้ไม่ได้ (คอลัมน์ JSON ว่างหรือถูกแก้)'); return; }
+  const sd = savedQuoteData(x); if (sd) d.dep = sd.dep;
   QF.forEach(f => { $('q-' + f).value = d[f] == null ? '' : d[f]; });
   $('q-vat').checked = !!d.vatOn; Q.orderRow = d.orderRow || ''; $('q-from-order').value = Q.orderRow;
   Q.items = (d.items && d.items.length ? d.items : [blankItem()]).map(i => ({ desc: i.desc || '', qty: i.qty === 0 ? '' : String(i.qty ?? ''), unit: i.unit || '', price: i.price === 0 ? '' : String(i.price ?? '') }));
@@ -977,9 +978,9 @@ function openSavedQuote(x) {
 function quoteRow(q, status) {
   const items = q.items.map(i => `${i.desc.split('\n')[0]} × ${i.qty} ${i.unit} @ ${money(i.price)}`).join('\n');
   const keep = Object.fromEntries(QF.map(f => [f, q[f]]));
-  const json = JSON.stringify({ ...keep, vatOn: q.vatOn, orderRow: q.orderRow, items: q.items.map(({ desc, qty, unit, price }) => ({ desc, qty, unit, price })) });
+  const json = JSON.stringify({ ...keep, v: 2, vatOn: q.vatOn, orderRow: q.orderRow, items: q.items.map(({ desc, qty, unit, price }) => ({ desc, qty, unit, price })) });
   const safe = (s) => String(s == null ? '' : s).replace(/^[=+\-@]/, "'$&");
-  return [q.no, q.date, q.orderRow, safe(q.name), safe(q.company), safe(q.email), safe(q.phone), safe(items), Math.round(q.base * 100) / 100, Math.round(q.vat * 100) / 100, Math.round(q.total * 100) / 100, Math.round(q.dep * 100) / 100, q.validTo, status, json];
+  return [q.no, q.date, q.orderRow, safe(q.name), safe(q.company), safe(q.email), safe(q.phone), safe(items), Math.round(q.base * 100) / 100, Math.round(q.vat * 100) / 100, Math.round(q.total * 100) / 100, Math.round(q.depAmt * 100) / 100, q.validTo, status, json];
 }
 async function saveQuote() {
   if (!quoteData().items.length) { toast('เพิ่มรายการอย่างน้อย 1 รายการ'); return ''; }
@@ -1011,7 +1012,7 @@ function quoteText(q) {
   if (q.shipN) lines.push(`ค่าจัดส่ง ${money(q.shipN)} บาท`);
   if (q.vatOn) lines.push(`VAT 7% ${money(q.vat)} บาท`);
   lines.push(`ยอดรวมทั้งสิ้น ${money(q.total)} บาท (${bahtText(q.total)})`);
-  if (q.depPct) lines.push(`มัดจำ ${q.depPct}% = ${money(q.dep)} บาท`);
+  if (q.depPct) lines.push(`มัดจำ ${q.depPct}% = ${money(q.depAmt)} บาท`);
   if (q.validTo) lines.push(`ยืนราคาถึง ${thLong(q.validTo)}`);
   if (q.lead) lines.push(`ระยะเวลาผลิต: ${q.lead}`);
   if (q.pay) lines.push(`การชำระเงิน: ${q.pay}`);
@@ -1096,9 +1097,12 @@ function savedQuoteData(x) {
   if (!d) return null;
   const items = (d.items || []).map(i => ({ desc: i.desc || '', qty: num(i.qty), unit: i.unit || '', price: num(i.price), total: num(i.qty) * num(i.price) }));
   const sub = items.reduce((s, i) => s + i.total, 0), discN = num(d.disc), shipN = num(d.ship), base = Math.max(0, sub - discN + shipN);
-  const vat = d.vatOn ? Math.round(base * 7) / 100 : 0, total = base + vat, depPct = num(d.dep), dep = depPct ? Math.round(total * depPct) / 100 : 0;
+  const vat = d.vatOn ? Math.round(base * 7) / 100 : 0, total = base + vat;
+  // ใบเก่า (ก่อน v2) เก็บ dep เป็นจำนวนเงินมัดจำ ไม่ใช่ % → แปลงกลับเป็น %
+  let depPct = num(d.dep); if (!d.v && depPct) { depPct = total ? Math.round(depPct / total * 10000) / 100 : 0; if (depPct > 100) depPct = 0; }
+  const depAmt = depPct ? Math.round(total * depPct) / 100 : 0;
   let validTo = ''; if (d.date && num(d.valid)) { const [y, mo, dd] = d.date.split('-').map(Number); validTo = key(new Date(y, mo - 1, dd + num(d.valid))); }
-  return { ...d, no: x.no, items, sub, discN, shipN, base, vat, total, depPct, dep, validTo, vatOn: !!d.vatOn };
+  return { ...d, dep: depPct || '', no: x.no, items, sub, discN, shipN, base, vat, total, depPct, depAmt, validTo, vatOn: !!d.vatOn };
 }
 function previewQuote(x) {
   const q = savedQuoteData(x);
