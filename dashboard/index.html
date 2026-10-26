@@ -165,6 +165,13 @@ tr.detail td { padding: 0 10px 12px 48px; }
 .qstat { font: inherit; font-size: .78rem; border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px; background: var(--panel); color: var(--ink); }
 .qstat.s-sent { background: var(--sky); border-color: var(--sky); } .qstat.s-won { background: var(--mint); border-color: var(--mint); color: var(--mint-ink); }
 .qstat.s-lost { background: var(--soft); color: var(--muted); } .qstat.s-draft { background: var(--butter); border-color: var(--butter); color: var(--butter-ink); }
+.qstat.s-rev { background: #ECE6F7; border-color: #ECE6F7; color: #5B3E96; }
+.rv { width: min(100%, 540px); max-height: calc(100% - 32px); overflow: auto; background: var(--panel); border-radius: var(--r-lg); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.rv h3 { margin: 0; font-size: 1.05rem; } .rv p { margin: 0; color: var(--muted); font-size: .85rem; }
+.rv .lbl { font-size: .8rem; color: var(--muted); margin-top: 6px; }
+.rv .opt { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; text-align: left; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: .88rem; cursor: pointer; }
+.rv .opt:hover { border-color: var(--ink); } .rv .opt small { display: block; color: var(--muted); font-size: .75rem; } .rv .opt .amt { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rv .opt.new { background: var(--ink); color: var(--panel); border-color: var(--ink); justify-content: center; font-weight: 600; }
 .ql-acts { display: flex; gap: 6px; flex-wrap: wrap; }
 .qlist2 table { min-width: 760px; }
 .qlist2 td.amt { text-align: right; white-space: nowrap; } .qlist2 th.amt { text-align: right; }
@@ -498,6 +505,7 @@ tr.detail td { padding: 0 10px 12px 48px; }
     <div class="row"><button class="qbtn" id="pv-close">ปิด</button><button class="qbtn" id="pv-print">พิมพ์</button><button class="qbtn primary" id="pv-edit">เปิดแก้ไข</button></div>
   </div>
 </div>
+<div class="ov" id="rv-ov" hidden><div class="rv" role="dialog" aria-modal="true" aria-label="Revise ราคา" id="rv-box"></div></div>
 <div class="toast" id="toast" hidden></div>
 <div class="login" id="login" hidden>
   <div class="lg-frame"><div class="lg-in">
@@ -860,7 +868,7 @@ function quoteData() {
   const depPct = num(v.dep); const depAmt = depPct ? Math.round(total * depPct) / 100 : 0;
   let validTo = '';
   if (v.date && num(v.valid)) { const [y, m, d] = v.date.split('-').map(Number); validTo = key(new Date(y, m - 1, d + num(v.valid))); }
-  return { ...v, vatOn: $('q-vat').checked, orderRow: Q.orderRow, items, sub, discN: disc, shipN: ship, base, vat, total, depPct, depAmt, validTo };
+  return { ...v, vatOn: $('q-vat').checked, orderRow: Q.orderRow, items, sub, discN: disc, shipN: ship, base, vat, total, depPct, depAmt, validTo, revOf: Q.reviseOf || '' };
 }
 
 function quoteDocHTML(q) {
@@ -933,7 +941,7 @@ function newQuote() {
   QF.forEach(f => { $('q-' + f).value = ''; });
   $('q-no').value = nextQuoteNo(); $('q-date').value = key(new Date()); $('q-notes').value = DEFAULT_NOTES;
   $('q-vat').checked = false; Q.orderRow = ''; $('q-from-order').value = '';
-  Q.items = [blankItem()]; Q.savedNo = ''; Q.dirty = true; renderItems(); renderPaper();
+  Q.items = [blankItem()]; Q.savedNo = ''; Q.reviseOf = ''; Q.dirty = true; renderItems(); renderPaper();
 }
 function fillFromOrder(o) {
   if (!o) return;
@@ -973,14 +981,14 @@ function openSavedQuote(x) {
   QF.forEach(f => { $('q-' + f).value = d[f] == null ? '' : d[f]; });
   $('q-vat').checked = !!d.vatOn; Q.orderRow = d.orderRow || ''; $('q-from-order').value = Q.orderRow;
   Q.items = (d.items && d.items.length ? d.items : [blankItem()]).map(i => ({ desc: i.desc || '', qty: i.qty === 0 ? '' : String(i.qty ?? ''), unit: i.unit || '', price: i.price === 0 ? '' : String(i.price ?? '') }));
-  Q.savedNo = x.no; Q.dirty = false;
+  Q.savedNo = x.no; Q.dirty = false; Q.reviseOf = d.revOf || '';
   renderItems(); renderPaper(); window.scrollTo({ top: 0, behavior: 'smooth' }); toast('เปิดใบ ' + x.no + ' แล้ว · แก้แล้วกด "บันทึก" จะอัปเดตใบเดิม (ถ้าจะทำใบใหม่ กด "ใบใหม่")');
 }
 
 function quoteRow(q, status) {
   const items = q.items.map(i => `${i.desc.split('\n')[0]} × ${i.qty} ${i.unit} @ ${money(i.price)}`).join('\n');
   const keep = Object.fromEntries(QF.map(f => [f, q[f]]));
-  const json = JSON.stringify({ ...keep, v: 2, vatOn: q.vatOn, orderRow: q.orderRow, items: q.items.map(({ desc, qty, unit, price }) => ({ desc, qty, unit, price })) });
+  const json = JSON.stringify({ ...keep, v: 2, revOf: q.revOf || undefined, vatOn: q.vatOn, orderRow: q.orderRow, items: q.items.map(({ desc, qty, unit, price }) => ({ desc, qty, unit, price })) });
   const safe = (s) => String(s == null ? '' : s).replace(/^[=+\-@]/, "'$&");
   return [q.no, q.date, q.orderRow, safe(q.name), safe(q.company), safe(q.email), safe(q.phone), safe(items), Math.round(q.base * 100) / 100, Math.round(q.vat * 100) / 100, Math.round(q.total * 100) / 100, Math.round(q.depAmt * 100) / 100, q.validTo, status, json];
 }
@@ -1000,11 +1008,12 @@ async function saveQuote() {
     return ex.no;
   }
   Q.lastSaveWasUpdate = false;
-  const no = nextQuoteNo();
+  const no = Q.reviseOf ? reviseNo(Q.reviseOf) : nextQuoteNo();
   $('q-no').value = no;
   const q = quoteData();
   await S.mcp.callTool(SERVER, 'append_values', { spreadsheetId: SHEET, range: "'ใบเสนอราคา'!A1", values: [quoteRow(q, 'ร่าง')] }, { cache: false });
   Q.savedNo = no; Q.dirty = false;
+  if (Q.reviseOf) { try { await setQuoteStatus(Q.reviseOf, QREV + ' → ' + no); } catch (e) {} }
   renderPaper();
   await loadQuotes();
   return no;
@@ -1055,10 +1064,46 @@ $('q-draft').addEventListener('click', () => withBusy($('q-draft'), async () => 
 }));
 
 // ---------- หน้ารายการใบเสนอราคา ----------
-const QSTAT = ['ร่าง', 'สร้าง draft อีเมลแล้ว', 'ส่งแล้ว', 'ลูกค้าตกลง', 'ไม่ผ่าน'];
+const QREV = 'Revise แล้ว';
+const QSTAT = ['ร่าง', 'สร้าง draft อีเมลแล้ว', 'ส่งแล้ว', 'ลูกค้าตกลง', 'ไม่ผ่าน', QREV];
+const isRev = (s) => String(s || '').startsWith(QREV);
+const revOfQ = (x) => { try { return JSON.parse(x.json).revOf || ''; } catch (e) { return ''; } };
+function reviseNo(no) {
+  const base = no.replace(/-R\d+$/, '');
+  const n = Q.quotes.map(x => x.no.startsWith(base + '-R') ? (parseInt(x.no.slice(base.length + 2), 10) || 0) : 0);
+  return base + '-R' + (Math.max(0, ...n) + 1);
+}
+function startRevision(x) {
+  showView('quote'); openSavedQuote(x);
+  Q.savedNo = ''; Q.reviseOf = x.no; Q.dirty = true; $('q-no').value = reviseNo(x.no); $('q-date').value = key(new Date()); renderPaper();
+  toast('กำลังทำใบ revise ของ ' + x.no + ' · แก้ราคาแล้วกดบันทึก ใบเดิมจะเปลี่ยนเป็น "Revise แล้ว" ให้เอง');
+}
+const closeRv = () => { $('rv-ov').hidden = true; renderQuotesView(); };
+function openRevisePicker(x) {
+  const box = $('rv-box'); box.textContent = '';
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  box.append(el('h3', '', 'Revise ราคา · ใบ ' + x.no), el('p', '', 'ใบนี้จะเปลี่ยนเป็น "Revise แล้ว" และไม่นับรวมในมูลค่ารวม (นับเฉพาะใบล่าสุด)'));
+  const nb = el('button', 'opt new', '+ ทำใบ revise ใหม่จากใบนี้ (' + reviseNo(x.no) + ')');
+  nb.addEventListener('click', () => { $('rv-ov').hidden = true; startRevision(x); });
+  box.append(nb);
+  const cust = (y) => (y.name + '|' + y.company).toLowerCase();
+  const cands = Q.quotes.filter(y => y.no !== x.no && y.status !== QDEL && !isRev(y.status))
+    .sort((a, b) => (cust(b) === cust(x)) - (cust(a) === cust(x)) || b.no.localeCompare(a.no));
+  if (cands.length) {
+    box.append(el('div', 'lbl', 'หรือเลือกใบเสนอราคาที่ revise ไปแล้ว'));
+    cands.slice(0, 30).forEach(y => {
+      const b = el('button', 'opt'); const l = el('span'); l.append(el('b', '', y.no), el('small', '', [y.customer || '—', y.date ? thDate(y.date) : ''].filter(Boolean).join(' · ')));
+      b.append(l, el('span', 'amt', money(num(y.total))));
+      b.addEventListener('click', () => { $('rv-ov').hidden = true; changeQuoteStatus(x, QREV + ' → ' + y.no, 'ใบ ' + x.no + ' → Revise เป็น ' + y.no); });
+      box.append(b);
+    });
+  }
+  const cb = el('button', 'qbtn', 'ยกเลิก'); cb.style.alignSelf = 'flex-end'; cb.addEventListener('click', closeRv); box.append(cb);
+  $('rv-ov').hidden = false; nb.focus();
+}
 const QDEL = 'ลบแล้ว';
 const QL = { from: '', to: '', status: '', q: '', busy: new Set(), pv: null };
-const statCls = (s) => s === 'ลูกค้าตกลง' ? 's-won' : s === 'ไม่ผ่าน' ? 's-lost' : (s === 'ส่งแล้ว' || s === 'สร้าง draft อีเมลแล้ว') ? 's-sent' : 's-draft';
+const statCls = (s) => isRev(s) ? 's-rev' : s === 'ลูกค้าตกลง' ? 's-won' : s === 'ไม่ผ่าน' ? 's-lost' : (s === 'ส่งแล้ว' || s === 'สร้าง draft อีเมลแล้ว') ? 's-sent' : 's-draft';
 (() => { const sel = $('ql-status'); QSTAT.forEach(s => sel.add(new Option(s, s))); sel.add(new Option('🗑 ถังขยะ (ลบแล้ว)', QDEL)); })();
 function renderQuotesView() {
   if (Q.view !== 'quotes') return;
@@ -1066,13 +1111,14 @@ function renderQuotesView() {
   const all = Q.quotes.filter(x => x.status !== QDEL);
   const trash = Q.quotes.filter(x => x.status === QDEL);
   const today = key(new Date());
-  $('qk-count').textContent = Q.qerr ? '—' : nf.format(all.length);
-  $('qk-value').textContent = Q.qerr ? '—' : money(all.reduce((s, x) => s + num(x.total), 0));
+  const live = all.filter(x => !isRev(x.status));
+  $('qk-count').textContent = Q.qerr ? '—' : nf.format(live.length);
+  $('qk-value').textContent = Q.qerr ? '—' : money(live.reduce((s, x) => s + num(x.total), 0));
   $('qk-won').textContent = Q.qerr ? '—' : nf.format(all.filter(x => x.status === 'ลูกค้าตกลง').length);
-  $('qk-open').textContent = Q.qerr ? '—' : nf.format(all.filter(x => x.status !== 'ลูกค้าตกลง' && x.status !== 'ไม่ผ่าน').length);
+  $('qk-open').textContent = Q.qerr ? '—' : nf.format(live.filter(x => x.status !== 'ลูกค้าตกลง' && x.status !== 'ไม่ผ่าน').length);
   if (Q.qerr) { m.hidden = false; m.className = 'qmsg err'; m.textContent = Q.qerr; $('ql-count').textContent = ''; return; }
   const q = QL.q.toLowerCase();
-  let list = (QL.status === QDEL ? trash : all).filter(x => (!QL.from || x.date >= QL.from) && (!QL.to || x.date <= QL.to) && (!QL.status || x.status === QL.status) && (!q || [x.no, x.customer, x.email, x.items].join(' ').toLowerCase().includes(q)));
+  let list = (QL.status === QDEL ? trash : all).filter(x => (!QL.from || x.date >= QL.from) && (!QL.to || x.date <= QL.to) && (!QL.status || x.status === QL.status || (QL.status === QREV && isRev(x.status))) && (!q || [x.no, x.customer, x.email, x.items].join(' ').toLowerCase().includes(q)));
   list = list.slice().sort((a, b) => b.no.localeCompare(a.no));
   $('ql-count').textContent = (list.length ? 'แสดง ' + nf.format(list.length) + ' จาก ' + nf.format(QL.status === QDEL ? trash.length : all.length) + ' ใบ' : '') + (trash.length && QL.status !== QDEL ? ' · ถังขยะ ' + nf.format(trash.length) + ' ใบ' : '');
   if (!list.length) { m.hidden = false; m.className = 'qmsg'; m.textContent = QL.status === QDEL ? 'ถังขยะว่าง' : all.length ? 'ไม่พบใบเสนอราคาตามตัวกรองนี้' : 'ยังไม่มีใบเสนอราคาที่บันทึกไว้ กด "+ ใบเสนอราคาใหม่" เพื่อเริ่ม'; return; }
@@ -1090,8 +1136,10 @@ function renderQuotesView() {
     const vt = td(x.validTo ? thDate(x.validTo) : ''); if (expired) { const s = document.createElement('span'); s.className = 'sb'; s.textContent = 'หมดอายุแล้ว'; vt.appendChild(s); }
     const sc = document.createElement('td'); const sel = document.createElement('select'); sel.className = 'qstat ' + statCls(x.status); sel.setAttribute('aria-label', 'สถานะใบ ' + x.no);
     const opts = QSTAT.includes(x.status) || !x.status ? QSTAT : [x.status].concat(QSTAT);
-    opts.forEach(s => sel.add(new Option(s, s))); sel.value = x.status || 'ร่าง'; sel.disabled = QL.busy.has(x.no);
-    sel.addEventListener('change', () => changeQuoteStatus(x, sel.value));
+    opts.forEach(s => sel.add(new Option(s, s))); if (isRev(x.status) && x.status !== QREV) [...sel.options].filter(o => o.value === QREV).forEach(o => o.remove()); sel.value = x.status || 'ร่าง'; sel.disabled = QL.busy.has(x.no);
+    sel.addEventListener('change', () => { if (sel.value === QREV) openRevisePicker(x); else changeQuoteStatus(x, sel.value); });
+    if (isRev(x.status)) { tr.style.opacity = '.7'; }
+    const rof = revOfQ(x); if (rof) { const s = document.createElement('span'); s.className = 'sb'; s.textContent = 'revise จาก ' + rof; c0.appendChild(s); }
     if (x.status === QDEL) { const s = document.createElement('span'); s.className = 'sb'; s.textContent = 'ลบแล้ว'; sc.appendChild(s); tr.style.opacity = '.65'; }
     else sc.appendChild(sel);
     tr.appendChild(sc);
@@ -1101,7 +1149,7 @@ function renderQuotesView() {
     bp.addEventListener('click', async () => { bp.disabled = true; try { await printQuote(x); } finally { bp.disabled = false; } });
     const b2 = document.createElement('button'); b2.className = 'act'; b2.textContent = 'เปิดแก้ไข'; b2.addEventListener('click', () => { showView('quote'); openSavedQuote(x); });
     const bc = document.createElement('button'); bc.className = 'act'; bc.textContent = 'ทำสำเนา'; bc.title = 'เปิดเป็นใบใหม่ (เลขที่ใหม่) โดยใช้ข้อมูลจากใบนี้';
-    bc.addEventListener('click', () => { showView('quote'); openSavedQuote(x); Q.savedNo = ''; Q.dirty = true; $('q-no').value = nextQuoteNo(); $('q-date').value = key(new Date()); renderPaper(); toast('ทำสำเนาจากใบ ' + x.no + ' แล้ว · กดบันทึกจะได้ใบใหม่'); });
+    bc.addEventListener('click', () => { showView('quote'); openSavedQuote(x); Q.savedNo = ''; Q.reviseOf = ''; Q.dirty = true; $('q-no').value = nextQuoteNo(); $('q-date').value = key(new Date()); renderPaper(); toast('ทำสำเนาจากใบ ' + x.no + ' แล้ว · กดบันทึกจะได้ใบใหม่'); });
     const bd = document.createElement('button'); bd.className = 'act';
     if (x.status === QDEL) {
       bd.textContent = 'กู้คืน'; bd.disabled = QL.busy.has(x.no);
@@ -1164,6 +1212,8 @@ function printQuote(x) {
 const closePv = () => { $('pv-ov').hidden = true; QL.pv = null; };
 $('pv-close').addEventListener('click', closePv);
 $('pv-ov').addEventListener('click', (e) => { if (e.target === $('pv-ov')) closePv(); });
+$('rv-ov').addEventListener('click', (e) => { if (e.target === $('rv-ov')) closeRv(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('rv-ov').hidden) closeRv(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('pv-ov').hidden) closePv(); });
 $('pv-print').addEventListener('click', () => { if (QL.pv) printQuote(QL.pv); });
 $('pv-edit').addEventListener('click', () => { const x = QL.pv; closePv(); if (x) { showView('quote'); openSavedQuote(x); } });
@@ -1303,7 +1353,7 @@ document.addEventListener('fullscreenchange', () => $('fsbtn').setAttribute('ari
 
 // อัปเดตอัตโนมัติ: ดึงข้อมูลใหม่ทุก 30 วินาทีขณะเปิดหน้านี้อยู่ และทันทีเมื่อกลับมาที่แท็บ
 const LIVE_MS = 30000;
-const liveIdle = () => !document.hidden && !S.busy.size && $('ov').hidden && $('pv-ov').hidden && !QL.busy.size;
+const liveIdle = () => !document.hidden && !S.busy.size && $('ov').hidden && $('pv-ov').hidden && $('rv-ov').hidden && !QL.busy.size;
 setInterval(() => { if (liveIdle()) refresh(true); }, LIVE_MS);
 document.addEventListener('visibilitychange', () => { if (!document.hidden && S.loadedAt && Date.now() - S.loadedAt.getTime() > 5000) refresh(true); });
 setInterval(() => { if (!S.loadedAt) return; const s = Math.round((Date.now() - S.loadedAt.getTime()) / 1000); $('stamp').textContent = '● สด · อัปเดต ' + (s < 5 ? 'เมื่อสักครู่' : s < 60 ? s + ' วินาทีที่แล้ว' : Math.floor(s / 60) + ' นาทีที่แล้ว'); }, 1000);
