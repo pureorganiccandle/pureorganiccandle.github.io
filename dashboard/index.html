@@ -1056,13 +1056,15 @@ $('q-draft').addEventListener('click', () => withBusy($('q-draft'), async () => 
 
 // ---------- หน้ารายการใบเสนอราคา ----------
 const QSTAT = ['ร่าง', 'สร้าง draft อีเมลแล้ว', 'ส่งแล้ว', 'ลูกค้าตกลง', 'ไม่ผ่าน'];
+const QDEL = 'ลบแล้ว';
 const QL = { from: '', to: '', status: '', q: '', busy: new Set(), pv: null };
 const statCls = (s) => s === 'ลูกค้าตกลง' ? 's-won' : s === 'ไม่ผ่าน' ? 's-lost' : (s === 'ส่งแล้ว' || s === 'สร้าง draft อีเมลแล้ว') ? 's-sent' : 's-draft';
-(() => { const sel = $('ql-status'); QSTAT.forEach(s => sel.add(new Option(s, s))); })();
+(() => { const sel = $('ql-status'); QSTAT.forEach(s => sel.add(new Option(s, s))); sel.add(new Option('🗑 ถังขยะ (ลบแล้ว)', QDEL)); })();
 function renderQuotesView() {
   if (Q.view !== 'quotes') return;
   const tb = $('ql-rows'); tb.textContent = ''; const m = $('ql-msg');
-  const all = Q.quotes;
+  const all = Q.quotes.filter(x => x.status !== QDEL);
+  const trash = Q.quotes.filter(x => x.status === QDEL);
   const today = key(new Date());
   $('qk-count').textContent = Q.qerr ? '—' : nf.format(all.length);
   $('qk-value').textContent = Q.qerr ? '—' : money(all.reduce((s, x) => s + num(x.total), 0));
@@ -1070,10 +1072,10 @@ function renderQuotesView() {
   $('qk-open').textContent = Q.qerr ? '—' : nf.format(all.filter(x => x.status !== 'ลูกค้าตกลง' && x.status !== 'ไม่ผ่าน').length);
   if (Q.qerr) { m.hidden = false; m.className = 'qmsg err'; m.textContent = Q.qerr; $('ql-count').textContent = ''; return; }
   const q = QL.q.toLowerCase();
-  let list = all.filter(x => (!QL.from || x.date >= QL.from) && (!QL.to || x.date <= QL.to) && (!QL.status || x.status === QL.status) && (!q || [x.no, x.customer, x.email, x.items].join(' ').toLowerCase().includes(q)));
+  let list = (QL.status === QDEL ? trash : all).filter(x => (!QL.from || x.date >= QL.from) && (!QL.to || x.date <= QL.to) && (!QL.status || x.status === QL.status) && (!q || [x.no, x.customer, x.email, x.items].join(' ').toLowerCase().includes(q)));
   list = list.slice().sort((a, b) => b.no.localeCompare(a.no));
-  $('ql-count').textContent = list.length ? 'แสดง ' + nf.format(list.length) + ' จาก ' + nf.format(all.length) + ' ใบ' : '';
-  if (!list.length) { m.hidden = false; m.className = 'qmsg'; m.textContent = all.length ? 'ไม่พบใบเสนอราคาตามตัวกรองนี้' : 'ยังไม่มีใบเสนอราคาที่บันทึกไว้ กด "+ ใบเสนอราคาใหม่" เพื่อเริ่ม'; return; }
+  $('ql-count').textContent = (list.length ? 'แสดง ' + nf.format(list.length) + ' จาก ' + nf.format(QL.status === QDEL ? trash.length : all.length) + ' ใบ' : '') + (trash.length && QL.status !== QDEL ? ' · ถังขยะ ' + nf.format(trash.length) + ' ใบ' : '');
+  if (!list.length) { m.hidden = false; m.className = 'qmsg'; m.textContent = QL.status === QDEL ? 'ถังขยะว่าง' : all.length ? 'ไม่พบใบเสนอราคาตามตัวกรองนี้' : 'ยังไม่มีใบเสนอราคาที่บันทึกไว้ กด "+ ใบเสนอราคาใหม่" เพื่อเริ่ม'; return; }
   m.hidden = true;
   for (const x of list) {
     const tr = document.createElement('tr');
@@ -1090,19 +1092,37 @@ function renderQuotesView() {
     const opts = QSTAT.includes(x.status) || !x.status ? QSTAT : [x.status].concat(QSTAT);
     opts.forEach(s => sel.add(new Option(s, s))); sel.value = x.status || 'ร่าง'; sel.disabled = QL.busy.has(x.no);
     sel.addEventListener('change', () => changeQuoteStatus(x, sel.value));
-    sc.appendChild(sel); tr.appendChild(sc);
+    if (x.status === QDEL) { const s = document.createElement('span'); s.className = 'sb'; s.textContent = 'ลบแล้ว'; sc.appendChild(s); tr.style.opacity = '.65'; }
+    else sc.appendChild(sel);
+    tr.appendChild(sc);
     const ac = document.createElement('td'); const box = document.createElement('div'); box.className = 'ql-acts';
     const b1 = document.createElement('button'); b1.className = 'act'; b1.textContent = 'ดู'; b1.addEventListener('click', () => previewQuote(x));
     const bp = document.createElement('button'); bp.className = 'act'; bp.textContent = 'พิมพ์'; bp.title = 'ดาวน์โหลดไฟล์ที่เปิดแล้วขึ้นหน้าต่างพิมพ์';
     bp.addEventListener('click', async () => { bp.disabled = true; try { await printQuote(x); } finally { bp.disabled = false; } });
     const b2 = document.createElement('button'); b2.className = 'act'; b2.textContent = 'เปิดแก้ไข'; b2.addEventListener('click', () => { showView('quote'); openSavedQuote(x); });
-    box.append(b1, bp, b2); ac.appendChild(box); tr.appendChild(ac);
+    const bc = document.createElement('button'); bc.className = 'act'; bc.textContent = 'ทำสำเนา'; bc.title = 'เปิดเป็นใบใหม่ (เลขที่ใหม่) โดยใช้ข้อมูลจากใบนี้';
+    bc.addEventListener('click', () => { showView('quote'); openSavedQuote(x); Q.savedNo = ''; Q.dirty = true; $('q-no').value = nextQuoteNo(); $('q-date').value = key(new Date()); renderPaper(); toast('ทำสำเนาจากใบ ' + x.no + ' แล้ว · กดบันทึกจะได้ใบใหม่'); });
+    const bd = document.createElement('button'); bd.className = 'act';
+    if (x.status === QDEL) {
+      bd.textContent = 'กู้คืน'; bd.disabled = QL.busy.has(x.no);
+      bd.addEventListener('click', () => changeQuoteStatus(x, 'ร่าง', 'กู้คืนใบ ' + x.no + ' แล้ว (สถานะ: ร่าง)'));
+      box.append(b1, bd);
+    } else {
+      bd.textContent = 'ลบ'; bd.style.color = '#B3261E'; bd.disabled = QL.busy.has(x.no);
+      bd.addEventListener('click', () => {
+        if (bd.dataset.armed) { changeQuoteStatus(x, QDEL, 'ย้ายใบ ' + x.no + ' ไปถังขยะแล้ว · กู้คืนได้จากตัวกรองสถานะ "ถังขยะ"'); return; }
+        bd.dataset.armed = '1'; bd.textContent = 'กดอีกครั้งเพื่อลบ'; bd.style.background = '#FCE8E6';
+        setTimeout(() => { if (bd.isConnected) { delete bd.dataset.armed; bd.textContent = 'ลบ'; bd.style.background = ''; } }, 4000);
+      });
+      box.append(b1, bp, b2, bc, bd);
+    }
+    ac.appendChild(box); tr.appendChild(ac);
     tb.appendChild(tr);
   }
 }
-async function changeQuoteStatus(x, status) {
+async function changeQuoteStatus(x, status, msg) {
   QL.busy.add(x.no); renderQuotesView();
-  try { await setQuoteStatus(x.no, status); toast('ใบ ' + x.no + ' → ' + status); }
+  try { await setQuoteStatus(x.no, status); toast(msg || ('ใบ ' + x.no + ' → ' + status)); }
   catch (e) { toast(e && (e.code === 'server_unavailable' || e.code === 'upstream_error') ? 'ไม่แน่ใจว่าบันทึกสำเร็จ กดโหลดใหม่เพื่อตรวจสอบ' : errText(e)); }
   finally { QL.busy.delete(x.no); renderQuotesView(); }
 }
